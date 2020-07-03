@@ -4,7 +4,7 @@ Pillow==7.1.2  # https://github.com/python-pillow/Pillow
 argon2-cffi==20.1.0  # https://github.com/hynek/argon2_cffi
 whitenoise==5.1.0  # https://github.com/evansd/whitenoise
 redis==3.5.0  # https://github.com/andymccurdy/redis-py
-django-filters==0.2.1
+django-filter==2.3.0
 
 # Django
 # ------------------------------------------------------------------------------
