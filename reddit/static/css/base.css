@@ -1,0 +1,71 @@
+#keep .v-navigation-drawer__border {}
+
+.upvote {
+    color: red;
+}
+
+.my-nav-item a {
+    text-decoration: none;
+    color: black;
+}
+
+.my-nav-item a:hover {
+    text-decoration: none;
+    color: rgb(245, 70, 216);
+}
+
+.post-item a {
+    text-decoration: none;
+}
+
+.upvote:focus {
+    color: pink;
+}
+
+.downvote:focus {
+    color: rgb(74, 74, 243);
+}
+
+.post-item:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+.post-item a:hover {
+    text-decoration: none;
+    background-color: rgb(224, 224, 224);
+}
+
+.my-nav-item:hover {
+    background-color: rgb(224, 224, 224);
+}
+
+#demo {
+    font-size: x-large;
+    font-family: 'Roboto', sans-serif;
+    max-height: 64px;
+}
+
+#demo:hover {
+    color: rgb(77, 77, 77);
+}
+
+#list {
+    font-size: x-large;
+    font-family: 'Roboto', sans-serif;
+}
+
+#list:hover {
+    color: rgb(77, 77, 77);
+}
+
+.jumbotron {
+    background-color: rgb(238, 231, 221);
+}
+
+.postList:nth-child(odd) .pcard {
+    background-color: #d5d0c9;
+}
+
+.postList:nth-child(even) .pcard {
+    background-color: #e7e5e1;
+}

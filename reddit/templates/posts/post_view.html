@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block menu %}
+
+<v-subheader class="grey--text">
+    <v-col cols="6">
+        <span class='my-nav-item'>
+            <a href="{% url 'reddit:subreddit' slug=post.subreddit.slug %}">
+                <h2>{{post.subreddit.name|upper}}</h2>
+            </a>
+        </span>
+    </v-col>
+</v-subheader>
+<v-divider dark class="my-4"></v-divider>
+<v-subheader>
+    <v-col cols="6">
+        Your Subreddits
+    </v-col>
+</v-subheader>
+{% for subreddit in subreddits %}
+<div class="my-nav-item" @click="drawer = !drawer, loadJson('/api/posts/?format=json&subreddit=' + '{{subreddit.id}}', '{{subreddit.name}}', '{% url 'reddit:subreddit' slug=subreddit.slug %}'), checkOrLoadSub">
+    <button>
+            <v-list-item>
+                <v-list-item-action>
+                    <v-icon>category
+                    </v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title class="grey--text">
+                        {{subreddit.name}}
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </button>
+</div>
+{% endfor %}
+{% endblock menu %}
+{% block content %}
+<!-- <div id="commentsApp">
+    <v-card style="width: 100%;">
+        <v-list> -->
+            <!-- https://github.com/vuetifyjs/vuetify/blob/master/packages/docs/src/examples/lists/intermediate/avatar-three-lines.vue -->
+    
+            <!-- <div class="post-item">
+                <v-list-item>
+                    <v-list-item-content>
+                        <v-list-item-title><strong>{{post.title}}</strong></v-list-item-title>
+                        <v-list-item style="min-height: 10rem; width: 100%;">{{post.description|linebreaksbr}}</v-list-item>
+                        <v-list-item-subtitle><strong>{{post.owner}}</strong> {{post.created}}</v-list-item-subtitle>
+                    </v-list-item-content>
+                </v-list-item>
+            </div>
+        </v-list>
+    </v-card>
+    </div> -->
+    {% endblock content %}
+
+    {% if request.user.is_authenticated %}
+    {% block script %}
+    postApp.loadJson('/api/allposts/?format=json&subreddit=' + '{{post.subreddit.id}}', '{{post.subreddit.name}}',
+    '{% url 'reddit:subreddit' slug=post.subreddit.slug %}', '{{post.subreddit.id}}')
+    postApp.loadDetailJsonDirect('{{post.id}}')
+    {% endblock script %}
+    {% endif %}
+    

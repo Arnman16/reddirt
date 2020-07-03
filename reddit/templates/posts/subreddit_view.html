@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block menu %}
+{% if request.user.is_authenticated %}
+<div class="my-nav-item" @click="">
+    <v-list-item>
+        <v-list-item-action>
+            <v-icon>category
+            </v-icon>
+        </v-list-item-action>
+        <v-list-item-content>
+            <v-list-item-title class="grey--text">
+                {{request.user.username}}
+            </v-list-item-title>
+        </v-list-item-content>
+    </v-list-item>
+</div>
+<v-divider dark class="my-4"></v-divider>
+<v-subheader class="grey--text">
+    <v-col cols="6">
+        <span class='my-nav-item'>
+            <h3><span id="subreddit_name">
+                </span></h3>
+        </span>
+    </v-col>
+</v-subheader>
+<div class="my-nav-item" @click="popup = !popup, drawer = !drawer">
+    <button>
+        <v-list-item>
+            <v-list-item-action>
+                <v-icon>add
+                </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+                <v-list-item-title class="grey--text">
+                    Post to <span id="subreddit_name">{{subreddit.name}}</span>
+                </v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+    </button>
+</div>
+<v-divider dark class="my-4"></v-divider>
+<v-subheader>
+    <v-col cols="6">
+        Your Subreddits
+    </v-col>
+</v-subheader>
+{% for subreddit in subreddits %}
+<div class="my-nav-item"
+    @click="loadJson('/api/allposts/?format=json&subreddit=' + '{{subreddit.id}}', '{{subreddit.name}}', '{% url 'reddit:subreddit' slug=subreddit.slug %}', '{{subreddit.id}}'), checkOrLoadSub()">
+    <button>
+        {% comment %} <button onclick="PersonJsonAsync({{person.id}})"> {% endcomment %}
+            <v-list-item>
+                <v-list-item-action>
+                    <v-icon>category
+                    </v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title class="grey--text">
+                        <span id="subreddit_name">{{subreddit.name}}</span>
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </button>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock menu %}
+
+{% block content %}
+
+{% endblock content %}
+
+{% if request.user.is_authenticated %}
+{% block script %}
+{% if subreddit %}
+postApp.loadJson('/api/allposts/?format=json&subreddit=' + '{{subreddit.id}}', '{{subreddit.name}}',
+'{% url 'reddit:subreddit' slug=subreddit.slug %}', '{{subreddit.id}}');
+{% else %}
+postApp.loadJson('/api/allposts/?format=json&subreddit=' + '{{subreddit.id}}', '{{page}}', '{% url 'reddit:all' %}',
+'0');
+{% endif %}
+postApp.checkOrLoadSub();
+{% endblock script %}
+{% endif %}
