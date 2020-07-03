@@ -21,16 +21,18 @@
                 <v-app-bar app dark color="rgb(66, 52, 34)" clipped-left>
                     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
                     <!-- <span class="title ml-3 mr-5">Google&nbsp;<span class="font-weight-light">Keep</span></span> -->
-                    <a href="{% url 'frontpage' %}">
-                        <span class="title ml-3 mr-5">Reddirt</span>
-                    </a>
-                    <span class="title"><span class="font-weight-light">
-                            /r/
-                        </span></span>
+                    <span class="reddirt-title">
+                        <a href="{% url 'frontpage' %}">
+                            <span class="h4 white--text ml-3 mr-5">Reddirt</span>
+                        </a>
+                    </span>
+
+                    {% if request.user.is_authenticated %}
+
+
+
                     <span class="title ml-1 mr-1"><span class="font-weight-light">
                             <% subreddit_name %>
-                        </span></span>
-                    <span class="title mr-1"><span class="font-weight-light">/
                         </span></span>
                     <span class="title"><span class="font-weight-light">
                             <% postDetailTitle %>
@@ -38,10 +40,86 @@
                     <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search">
                     </v-text-field> -->
                     <v-spacer></v-spacer>
+                    {% endif %}
                 </v-app-bar>
-                <v-navigation-drawer app v-model="drawer" clipped color="rgb(238, 231, 221)">
-                    <v-list dense color="rgb(238, 231, 221)">
+                <v-navigation-drawer app dark v-model="drawer" clipped color="rgb(79, 65, 47)">
+                    <v-list dense color="rgb(79, 65, 47)">
                         <v-divider dark class="my-4"></v-divider>
+                        {% if request.user.is_authenticated %}
+                        <v-subheader>
+                            <v-col cols="6">
+                                {{request.user.username}}
+                            </v-col>
+                        </v-subheader>
+                        <div class="my-nav-item" @click="">
+                            <a href="{% url 'users:detail' request.user.username  %}">
+                                <v-list-item>
+                                    <v-list-item-action>
+                                        <v-icon>account_circle
+                                        </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="white--text">
+                                            Your Profile
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </a>
+                        </div>
+                        <div class="my-nav-item" @click="">
+                            <a href="{% url 'account_logout' %}">
+                                <v-list-item>
+                                    <v-list-item-action>
+                                        <v-icon>logout
+                                        </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="white--text">
+                                            Sign Out
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </a>
+                        </div>
+                        <v-divider dark class="my-4"></v-divider>
+                        {% else %}
+                        <v-subheader>
+                            <v-col cols="6">
+
+                            </v-col>
+                        </v-subheader>
+                        <div class="my-nav-item" @click="">
+                            <a href="{% url 'account_login' %}">
+                                <v-list-item>
+                                    <v-list-item-action>
+                                        <v-icon>login
+                                        </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="white--text">
+                                            Sign In
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </a>
+                        </div>
+                        <div class="my-nav-item" @click="">
+                            <a href="{% url 'account_signup' %}">
+                                <v-list-item>
+                                    <v-list-item-action>
+                                        <v-icon>person_outline
+                                        </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="white--text">
+                                            Sign Up
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </a>
+                        </div>
+                        <v-divider dark class="my-4"></v-divider>
+                        {% endif %}
                         {% block menu %}
                         {% endblock menu %}
                         <v-divider dark class="my-4"></v-divider>
@@ -52,7 +130,7 @@
                                     </v-icon>
                                 </v-list-item-action>
                                 <v-list-item-content>
-                                    <v-list-item-title class="grey--text">
+                                    <v-list-item-title class="darkgrey--text">
                                         Settings
                                     </v-list-item-title>
                                 </v-list-item-content>
@@ -61,9 +139,17 @@
                     </v-list>
                 </v-navigation-drawer>
                 <v-main>
+                    <v-container fluid>
+                        <v-card raised>
+                            
+                            {% block content %}
+                            {% endblock content %}
+                            {% block login %}
+                            {% endblock login %}
+                        </v-card>
+                    </v-container>
                     {% if request.user.is_authenticated %}
-                    {% block content %}
-                    {% endblock content %}
+
                     <v-dialog v-model="success_alert">
                         <v-alert type="success">
                             Success!
@@ -124,54 +210,56 @@
                             </v-row>
                         </v-container>
                     </v-app>
-                    <div class="postApp">
-                        <v-container class="postList" grid-list-xs,sm,md,lg,xl v-for="(post, index) in postList" :index="index" :key="post.id">
-                            <v-layout row>
-                                <v-flex xs2 md1 mt-2 mb-2>
-                                    <v-col align='center' justify-center>
-                                        <div>
-                                            <v-flex xs4 md4>
-                                                <v-icon :style="post.user_up_style" :id="'upvote-' + post.id" class="upvote"
-                                                    @click="post_vote({{request.user.id}}, post.id, 1, index)">arrow_upward
-                                                </v-icon>
-                                            </v-flex>
-                                            <v-flex xs4 md4>
-                                                <div justify-center align="center" ma-0 :id="'score-' + post.id"
-                                                    class="text-center"><% post.score %></text></div>
-                                            </v-flex>
-                                            <v-flex xs4 md4>
-                                                <v-icon :style="post.user_down_style" :id="'downvote-' + post.id" class="downvote"
-                                                    @click="post_vote({{request.user.id}}, post.id, -1, index)">arrow_downward
-                                                </v-icon>
-                                            </v-flex>
-                                        </div>
-                                    </v-col>
+                    <v-slide-y-transition>
+                        <div id="myPostList" v-show="!posts_loading" class="postList">
+                            <v-container class="pa-4" fluid v-for="(post, index) in postList" :index="index" :key="post.id">
 
-                                </v-flex>
-
-                                <v-flex xs10 md11>
-                                    <v-card class="pcard mx-auto" @click="loadDetailJson(index)"
-                                        fill-width outlined>
-                                        <v-list-item three-line>
-                                            <v-list-item-content>
-                                                <div class="overline mb-1"><% post.subreddit_name %></div>
-                                                <v-list-item-title class="h6 mb-1"><% post.title %></v-list-item-title>
-                                                <v-list-item-subtitle>posted by <a
-                                                        v-bind:href="post.owner_url"><% post.username %></a>
-                                                    <% post.time_since_post %></v-list-item-subtitle>
-                                            </v-list-item-content>
-                                            <v-list-item-avatar tile size="80">
-                                                <v-icon size="40">
-                                                    text_snippet
+                                <v-layout>
+                                    <v-row class='text-center ma-0'>
+                                        <v-col class='text-center'>
+                                            <v-btn icon>
+                                                <v-icon :style="post.user_up_style" :id="'upvote-' + post.id"
+                                                    class="upvote"
+                                                    @click="post_vote({{request.user.id}}, post.id, 1, index)">
+                                                    arrow_upward
                                                 </v-icon>
-                                            </v-list-item-avatar>
-                                        </v-list-item>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
-                    </div>
+                                            </v-btn>
+                                            <div class="fuck">
+                                                <% post.score %></div>
+                                            <v-btn icon>
+                                                <v-icon :style="post.user_down_style" :id="'downvote-' + post.id"
+                                                    class="downvote"
+                                                    @click="post_vote({{request.user.id}}, post.id, -1, index)">
+                                                    arrow_downward
+                                                </v-icon>
+                                            </v-btn>
+                                        </v-col>
+                                    </v-row>
+                                    <v-flex xs10 md11 center class="pa-0 ma-0">
+                                        <v-card class="pcard mx-auto pa-0" justify-center @click="loadDetailJson(index)"
+                                            fill-width outlined>
+                                            <v-list-item three-line>
+                                                <v-list-item-content>
+                                                    <div class="overline mb-1"><% post.subreddit_name %></div>
+                                                    <v-list-item-title class="h6 mb-1"><% post.title %>
+                                                    </v-list-item-title>
+                                                    <v-list-item-subtitle>posted by <a
+                                                            v-bind:href="post.owner_url"><% post.username %></a>
+                                                        <% post.time_since_post %></v-list-item-subtitle>
+                                                </v-list-item-content>
+                                                <v-list-item-avatar tile size="80">
+                                                    <v-icon size="40">
+                                                        text_snippet
+                                                    </v-icon>
+                                                </v-list-item-avatar>
+                                            </v-list-item>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                        </div>
+                    </v-slide-y-transition>
                 </v-main>
             </v-app>
         </v-app>
@@ -193,7 +281,8 @@
                                 <v-col align='center' justify-center>
                                     <div>
                                         <v-flex xs4 md4>
-                                            <v-icon :style="postDetailData.user_up_style" :id="'upvote-' + postDetailData.id" class="upvote"
+                                            <v-icon :style="postDetailData.user_up_style"
+                                                :id="'upvote-' + postDetailData.id" class="upvote"
                                                 @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
                                                 arrow_upward
                                             </v-icon>
@@ -203,7 +292,8 @@
                                                 class="text-center"><% postDetailData.score %></text></div>
                                         </v-flex>
                                         <v-flex xs4 md4>
-                                            <v-icon :style="postDetailData.user_down_style" :id="'downvote-' + postDetailData.id" class="downvote"
+                                            <v-icon :style="postDetailData.user_down_style"
+                                                :id="'downvote-' + postDetailData.id" class="downvote"
                                                 @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
                                                 arrow_downward
                                             </v-icon>
@@ -249,19 +339,9 @@
                 </v-main>
             </v-card>
         </v-dialog>
+        {% endif %}
     </div>
 
-
-    {% else %}
-    <a href="{% url 'account_login' %}">
-        <h2>PLEASE SIGN IN</h2>
-    </a>
-    
-    {% block login %}
-        
-    {% endblock login %}
-        
-    {% endif %}
     <script src='{% static 'js/jquery-3.5.1.min.js' %}'></script>
     <script src='{% static 'js/fontawesome.js' %}'></script>
     <script src='{% static 'js/base.js' %}'></script>
@@ -270,6 +350,7 @@
     <script src="{% static 'vue/js/axios.min.js' %}"></script>
     <script src='{% static 'js/myVue.js' %}'></script>
     <script>
+        {% if request.user.is_authenticated %}
         {% block subreddit_json %}
         var jsonurl_subreddit = '/api/posts/?format=json'
         {% endblock subreddit_json %}
@@ -277,6 +358,7 @@
 
         {% block script %}
         {% endblock script %}
+        {% endif %}
     </script>
 </body>
 

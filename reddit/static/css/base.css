@@ -1,7 +1,29 @@
 #keep .v-navigation-drawer__border {}
 
 .upvote {
-    color: red;
+    color: rgb(255, 81, 0);
+}
+.reddirt-title .title{
+    text-decoration: none;
+    color: rgb(255, 72, 0);
+}
+.center {
+    align-items: center;
+    margin: 0px;
+}
+body a:hover {
+    text-decoration: none;
+}
+.fuck {
+    padding: 0px;
+    align-items: center;
+    text-align: center;
+}
+.fuck .v-btn {
+    color: pink;
+}
+.reddirt-title a{
+    text-decoration: none;
 }
 
 .my-nav-item a {
@@ -36,7 +58,7 @@
 }
 
 .my-nav-item:hover {
-    background-color: rgb(224, 224, 224);
+    background-color: rgb(94, 81, 63);
 }
 
 #demo {
@@ -59,13 +81,13 @@
 }
 
 .jumbotron {
-    background-color: rgb(238, 231, 221);
-}
-
-.postList:nth-child(odd) .pcard {
     background-color: #d5d0c9;
 }
 
-.postList:nth-child(even) .pcard {
-    background-color: #e7e5e1;
+#myPostList.postList:nth-child(odd) .pcard {
+    background-color: #d5d0c9;
+}
+
+#myPostList.postList:nth-child(even) .pcard {
+    background-color: #cecbc5;
 }

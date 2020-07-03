@@ -6,6 +6,7 @@ postApp = new Vue({
         source: String,
     },
     data: () => ({
+        myPostList: false,
         drawer: false,
         popup: false,
         success_alert: false,
@@ -136,10 +137,10 @@ postApp = new Vue({
             }
             window.history.pushState("object or string", "Title", this.postDetailData.full_url);
         },
-        submit: async function () {
+        submit_func: function () {
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-            var success_bool = await axios.post('/api/posts/', {
+            return axios.post('/api/posts/', {
                 title: this.submit_title,
                 description: this.submit_description,
                 owner: document.getElementById("userId").value,
@@ -154,6 +155,9 @@ postApp = new Vue({
                     return false;
 
                 });
+        },
+        submit: async function () {
+            var success_bool = await this.submit_func();
             if (success_bool) {
                 this.popup = !this.popup;
                 this.success_alert = !this.success_alert;
@@ -163,11 +167,11 @@ postApp = new Vue({
                 this.error_alert = !this.error_alert;
             }
         },
-        edit_post: async function () {
+        edit_post_func: function () {
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
             drf_url = '/api/posts/' + this.detail_id + '/';
-            var success_bool = await axios.put(drf_url, {
+            axios.put(drf_url, {
                 title: this.postDetailTitle,
                 description: this.postDetailDescription,
                 owner: document.getElementById("userId").value,
@@ -182,6 +186,10 @@ postApp = new Vue({
                     return false;
 
                 });
+        },
+        edit_post: async function () {
+            
+            var success_bool = await edit_post_func();
             if (success_bool) {
                 this.edit_post_popup = false
                 this.success_alert = true;

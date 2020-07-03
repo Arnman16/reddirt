@@ -6,6 +6,9 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block inner %}
+<v-btn class="ma-4" icon href="{% url 'frontpage' %}">
+  <v-icon>mdi-close</v-icon>
+</v-btn>
 <h1>{% trans "Sign Up" %}</h1>
 
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
@@ -16,7 +19,7 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button class="btn btn-primary" type="submit">{% trans "Sign Up" %} &raquo;</button>
+  <v-btn color="brown" type="submit">{% trans "Sign Up" %}</v-btn>
 </form>
 
 {% endblock %}

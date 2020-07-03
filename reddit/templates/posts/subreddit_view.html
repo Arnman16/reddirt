@@ -1,25 +1,12 @@
 {% extends 'base.html' %}
 {% block menu %}
 {% if request.user.is_authenticated %}
-<div class="my-nav-item" @click="">
-    <v-list-item>
-        <v-list-item-action>
-            <v-icon>category
-            </v-icon>
-        </v-list-item-action>
-        <v-list-item-content>
-            <v-list-item-title class="grey--text">
-                {{request.user.username}}
-            </v-list-item-title>
-        </v-list-item-content>
-    </v-list-item>
-</div>
-<v-divider dark class="my-4"></v-divider>
-<v-subheader class="grey--text">
+
+<v-subheader class="white--text">
     <v-col cols="6">
         <span class='my-nav-item'>
-            <h3><span id="subreddit_name">
-                </span></h3>
+            <span id="subreddit_name"><% subreddit_name %>
+            </span>
         </span>
     </v-col>
 </v-subheader>
@@ -31,15 +18,15 @@
                 </v-icon>
             </v-list-item-action>
             <v-list-item-content>
-                <v-list-item-title class="grey--text">
-                    Post to <span id="subreddit_name">{{subreddit.name}}</span>
+                <v-list-item-title class="white--text">
+                    Post to <span id="subreddit_name"><% subreddit_name %></span>
                 </v-list-item-title>
             </v-list-item-content>
         </v-list-item>
     </button>
 </div>
 <v-divider dark class="my-4"></v-divider>
-<v-subheader>
+<v-subheader class="white--text">
     <v-col cols="6">
         Your Subreddits
     </v-col>
@@ -55,7 +42,7 @@
                     </v-icon>
                 </v-list-item-action>
                 <v-list-item-content>
-                    <v-list-item-title class="grey--text">
+                    <v-list-item-title class="white--text">
                         <span id="subreddit_name">{{subreddit.name}}</span>
                     </v-list-item-title>
                 </v-list-item-content>
@@ -65,6 +52,24 @@
 {% endfor %}
 {% endif %}
 {% endblock menu %}
+
+{% block login %}
+{% if request.user.is_authenticated %}
+{% else %}
+<v-container center>
+    <div class="text-center">
+        <v-card-text> You don't appear to be signed in.</v-card-text>
+        <v-card-text>
+            <v-btn dark elevation=5 class="ma-4" href="{% url 'account_login' %}" color="indigo">Sign In</v-btn>
+        </v-card-text>
+        <v-card-text> Don't have an account?</v-card-text>
+        <v-card-text>
+            <v-btn dark elevation=5 class="ma-4" href="{% url 'account_signup' %}" color="green">Sign Up</v-btn>
+        </v-card-text>
+    </div>
+</v-container>
+{% endif %}
+{% endblock login %}
 
 {% block content %}
 
