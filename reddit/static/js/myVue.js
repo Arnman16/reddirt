@@ -148,7 +148,7 @@ postApp = new Vue({
             })
                 .then(function (response) {
                     console.log(response);
-                    return true;
+                    return response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -171,7 +171,7 @@ postApp = new Vue({
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
             drf_url = '/api/posts/' + this.detail_id + '/';
-            axios.put(drf_url, {
+            return axios.put(drf_url, {
                 title: this.postDetailTitle,
                 description: this.postDetailDescription,
                 owner: document.getElementById("userId").value,
@@ -179,7 +179,7 @@ postApp = new Vue({
             })
                 .then(function (response) {
                     console.log(response);
-                    return true;
+                    return response.data;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -187,10 +187,9 @@ postApp = new Vue({
 
                 });
         },
-        edit_post: async function () {
-            
-            var success_bool = await edit_post_func();
-            if (success_bool) {
+        edit_post: async function () { 
+            const success = await this.edit_post_func();
+            if (success) {
                 this.edit_post_popup = false
                 this.success_alert = true;
                 this.postDetailData['title'] = this.postDetailTitle;
