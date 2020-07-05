@@ -10,7 +10,7 @@ from reddit.posts.views import AllSubredditsView, FrontPageView
 urlpatterns = [
     path("", FrontPageView.as_view(), name="frontpage"),
     path(
-        "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
+        "testing_sandbox/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),

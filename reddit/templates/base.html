@@ -11,6 +11,36 @@
     <link href="{% static 'css/base.css' %}" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> -->
+    <script type="text/x-template" id="item-template">
+        <div container>
+            <li>
+                <div
+                    :class="{bold: hasReply}"
+                    @click="toggle"
+                    @dblclick="makeFolder"
+                    v-bind:item="item">
+                    <v-card color="#e0e0e0" @click="dothis" flat outlined class="ma-1 pa-0">
+                        <div container>
+                            <v-row class="ma-1 pa-0">
+                                <v-col class="ma-1 pa-0"><span v-if="hasReply"><v-icon @click=""><% isOpen ? 'remove' : 'add' %></v-icon></span></v-col>
+                                <v-col class="ma-1 pa-0"><v-card-text class="ma-1 pa-0"><% item.comment %></v-card-text></v-col>
+                            </v-row>
+                        </div>
+                    </v-card>
+            </div>
+                <ul v-show="isOpen" v-if="hasReply">
+                    <tree-item
+                        class="item"
+                        v-for="(child, index) in item.children"
+                        :key="index"
+                        :item="child"
+                        @make-folder="$emit('make-folder', $event)"
+                        @add-item="$emit('add-item', $event)"
+                    ></tree-item>
+                </ul>
+            </li>
+    </div>
+    </script>
 </head>
 
 <body>
@@ -141,7 +171,7 @@
                 <v-main>
                     <v-container fluid>
                         <v-card raised>
-                            
+
                             {% block content %}
                             {% endblock content %}
                             {% block login %}
@@ -212,7 +242,8 @@
                     </v-app>
                     <v-slide-y-transition>
                         <div id="myPostList" v-show="!posts_loading" class="postList">
-                            <v-container class="pa-4" fluid v-for="(post, index) in postList" :index="index" :key="post.id">
+                            <v-container class="pa-4" fluid v-for="(post, index) in postList" :index="index"
+                                :key="post.id">
 
                                 <v-layout>
                                     <v-row class='text-center ma-0'>
@@ -302,32 +333,34 @@
                                 </v-col>
                             </v-flex>
                             <v-flex xs10 md11>
-                                <div class="container">
-                                    <h4 class="display-5"><% postDetailData.title %></h4>
-                                    <div v-if="postDetailData.owner == {{request.user.id}}">
-                                        <v-btn @click="edit_post_popup = true" small>EDIT</v-btn>
-                                    </div>
-                                    <hr class="my-2">
-                                    <p class="lead">
-                                    <div v-html="postDetailData.description_br"></div>
-                                    </p>
-                                    <hr class="my-2">
-                                    <span class="font-weight-light">
-                                        <p>Posted by <strong><% postDetailData.username %></strong></p>
-                                        <p>Last modified: <% postDetailData.created %></p>
-                                    </span>
-                                </div>
+                                <v-container>
+                                    <v-card flat rounded class="pa-5 mr-5">
+                                        <h4 class="display-5"><% postDetailData.title %></h4>
+                                        <div v-if="postDetailData.owner == {{request.user.id}}">
+                                            <v-btn @click="edit_post_popup = true" small>EDIT</v-btn>
+                                        </div>
+                                        <hr class="my-2">
+                                        <p class="lead">
+                                        <div v-html="postDetailData.description_br"></div>
+                                        </p>
+                                        <hr class="my-2">
+                                        <span class="font-weight-light">
+                                            <p>Posted by <strong><% postDetailData.username %></strong></p>
+                                            <p>Last modified: <% postDetailData.created %></p>
+                                        </span>
+                                    </v-card>
+                                </v-container>
                             </v-flex>>
                         </v-layout>
                     </div>
                     <v-card-text>
                         <v-list>
-                            <div class="post-item">
+                            <div class="post-item" v-for="comment in commentsList" :key="comment.id">
                                 <v-list-item>
                                     <v-list-item-content>
-                                        <v-list-item-title><strong><% postDetailData.title %></strong>
+                                        <v-list-item-title><strong><% comment.username %></strong>
                                         </v-list-item-title>
-                                        <% postDetailData.description %>
+                                        <% comment.comment %>
                                         <v-list-item-subtitle><strong><% postDetailData.username %></strong>
                                         </v-list-item-subtitle>
                                         <v-list-item-subtitle><% postDetailData.created %></v-list-item-subtitle>

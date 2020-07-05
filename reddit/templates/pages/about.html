@@ -1,54 +1,28 @@
 {% extends "base.html" %}
 
 {% block script %}
-    postApp.loadJson('333', '333', 'd', 2)
+postApp.detail_id = 49;
+postApp.showComments()
+
 {% endblock script %}
-    
+
 {% block content %}
 
-<p><%vote_color%></p>
-<!-- <div id="postApp">
-    <v-container grid-list-xs,sm,md,lg,xl model="postList[1]" :key="post.id">
-        
-        <v-layout row>
-            
-            <v-flex xs2 md1 mt-2 mb-2>
-                <v-col align='center' justify-center>
-                    <div>
-                    <v-flex xs4 md4>
-                        <v-icon :id="'upvote-' + post.id" class="upvote" @click="post_vote({{request.user.id}}, post.id, 1)">arrow_upward</v-icon>
-                    </v-flex>
-                    <v-flex xs4 md4>
-                        <div justify-center align="center" ma-0 :id="'score-' + post.id" class="text-center"><% post.score %></text></div>
-                    </v-flex>
-                    <v-flex xs4 md4>
-                        <v-icon :id="'downvote-' + post.id" class="downvote" @click="post_vote({{request.user.id}}, post.id, -1)">arrow_downward</v-icon>
-                    </v-flex>
+    <v-container>
+        <v-row>
+            <v-col>
+                <div id="postApp">
+                    <tree-item class="item" :item="treeData" @make-folder="makeFolder"></tree-item>
                 </div>
-                </v-col>
-            
-            </v-flex>
-        
-            <v-flex xs10 md11>
-                <v-card class="mx-auto" color="rgb(238, 231, 221)" @click="loadDetailJson(post.id)" fill-width outlined>
-                    <v-list-item three-line>
-                        <v-list-item-content>
-                            <div class="overline mb-1"><% post.subreddit_name %></div>
-                            <v-list-item-title class="h6 mb-1"><% post.title %></v-list-item-title>
-                            <v-list-item-subtitle>posted by <a v-bind:href="post.owner_url"><% post.username %></a>
-                                <% post.time_since_post %></v-list-item-subtitle>
-                        </v-list-item-content>
-                        <v-list-item-avatar tile size="80">
-                            <v-icon size="40">
-                                text_snippet
-                            </v-icon>
-                        </v-list-item-avatar>
-                    </v-list-item>
-                    </v-card-actions>
-                </v-card>
-            </v-flex>
-        </v-layout>
+            </v-col>
+            <v-divider vertical></v-divider>
+            <v-col class="pa-6" cols="6">
+                <div @show-click-details='comment'>
+                    <% comment %>
+                </div>
+            </v-col>
+        </v-row>
+
     </v-container>
-</div> -->
+
 {% endblock content %}
-    

@@ -47,9 +47,20 @@ body a:hover {
 .downvote:focus {
     color: rgb(74, 74, 243);
 }
+.container.item {
+    margin: none;
+    padding: none;
+    color: pink;
+}
 
 .post-item:hover {
     background-color: rgb(224, 224, 224);
+}
+ul {
+    list-style-type: none;
+}
+li {
+    list-style-type: none;
 }
 
 .post-item a:hover {
