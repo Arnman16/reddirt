@@ -40,6 +40,11 @@ Vue.component("tree-item", {
             isOpen: false,
             level: 'grey',
             sheet: false,
+            submitReply: false,
+            submitCommentTldr: '',
+            submitComment: '',
+            submitReplyToId: null,
+            selectedComment: {},
         };
     },
     computed: {
@@ -48,8 +53,77 @@ Vue.component("tree-item", {
         }
     },
     methods: {
+        submit_func: function () {
+            axios.defaults.xsrfCookieName = 'csrftoken';
+            axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+            if(this.item.id) {
+                console.log(this.selectedComment)
+                return axios.post('/api/comments/', {
+                    tldr: this.submitCommentTldr,
+                    comment: this.submitComment,
+                    post_id: this.selectedComment.post_id,
+                    parent: this.selectedComment.id,
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        return response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        return false;
+    
+                    });
+                }
+                else {
+                    console.log(this.selectedComment)
+                    return axios.post('/api/comments/', {
+                        tldr: this.submitCommentTldr,
+                        comment: this.submitComment,
+                        post_id: this.selectedComment.post_id,
+                        parent: this.selectedComment.id,
+                    })
+                        .then(function (response) {
+                            console.log(response);
+                            return response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            return false;
+        
+                        });
+                }
+        },
+        submit: async function () {
+            var success_bool = await this.submit_func();
+            if (success_bool) {
+                alert('success!')
+                this.submitReply = false;
+                if (this.item.level || this.item.level==0) {
+                    level = this.item.level + 1;
+                }
+                else {
+                    level = 0;
+                }
+                this.item.children.push({
+                    tldr: this.submitCommentTldr,
+                    comment: this.submitComment,
+                    post_id: this.selectedComment.post_id,
+                    parent: this.selectedComment.id,
+                    time_since_comment: 'just now.',
+                    children: [],
+                    level: level,
+                });
+            }
+            else {
+                alert('oops!')
+                this.submitReply = false;
+            }
+        },
+        clear() {
+            this.submitCommentTldr = ''
+            this.submitComment = ''
+        },
         getColor: function (i) {
-            console.log(i);
             if(i===0) {
                 return 'deep-purple lighten-4';
             }
@@ -73,7 +147,6 @@ Vue.component("tree-item", {
             }
         },
         getColor2: function (i) {
-            console.log(i);
             if(i===0) {
                 return 'deep-purple lighten-5';
             }
@@ -109,15 +182,34 @@ Vue.component("tree-item", {
             }
         },
         showClickedComment: function () {
-            this.sheet = true;
-            var comment = { 
-                id: this.item.id,
-                comment: this.item.comment_br,
-                username: this.item.username,
-            };
-            console.log("DO THIS")
-            this.$store.commit("changeComment", comment);
-            // this.$emit("show-click-details", this.commentSelected);
+            console.log(this.item.id)
+            console.log(this.item.post_id)
+            if(this.item.id) {
+                this.sheet = true;
+                var comment = { 
+                    id: this.item.id,
+                    comment: this.item.comment_br,
+                    username: this.item.username,
+                    post_id: this.item.post_id,
+                    tldr: this.item.tldr,
+                    time_since_comment: this.item.time_since_comment,
+                };
+                this.selectedComment = comment;
+                console.log("DO THIS")
+                // this.$store.commit("changeComment", comment);
+                // this.$emit("show-click-details", this.commentSelected);
+            }
+            else {
+                var comment = { 
+                    id: null,
+                    comment: '',
+                    username: '',
+                    post_id: this.item.post_id,
+                };
+                console.log(comment)
+                this.selectedComment = comment;
+                this.submitReply = true;
+            }
         }
     }
 });
@@ -253,7 +345,7 @@ postApp = new Vue({
         },
         showComments: async function () {
             holder = await this.getComments();
-            this.commentsList = { children: holder, comment: "Comments", id: 0 };
+            this.commentsList = { children: holder, comment: "Comments", tldr: "Comments", id: 0, post_id: this.detail_id };
             this.treeData = this.commentsList;
 
         },

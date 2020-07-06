@@ -94,7 +94,7 @@ class CommentSerializer(serializers.ModelSerializer):
     user_id = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     parent = serializers.PrimaryKeyRelatedField(
-        queryset=PostComment.objects.all())
+        queryset=PostComment.objects.all(), allow_null=True)
 
     class Meta:
         model = PostComment
@@ -116,6 +116,7 @@ class CommentSerializer(serializers.ModelSerializer):
             'level',
             'parent',
             'children',
+            'tldr',
         ]
 
         extra_kwargs = {

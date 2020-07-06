@@ -25,7 +25,7 @@
                                 <v-flex xs1 md1>
                                 <v-col class="ma-1 pa-0"><span v-if="hasReply"><v-icon @click="toggle"><% isOpen ? 'remove' : 'add' %></v-icon></span></v-col>
                                 </v-flex>
-                                <v-col class="ma-1 pa-0"><v-card-text @click="showClickedComment" class="ma-1 pa-0"><% item.comment %></v-card-text></v-col>
+                                <v-col class="ma-1 pa-0"><v-card-text @dblclick="showClickedComment" @click="toggle" class="ma-1 pa-0"><% item.tldr %></v-card-text></v-col>
                             </v-row>
                         </div>
                     
@@ -70,14 +70,42 @@
                         </v-col>
                     </v-flex>
                     <v-col>
-                        <v-card-text v-html="$store.getters.comment"></v-card-text>
-                        <v-card-text><% $store.getters.comment_username %></v-card-text>
+                        <v-card-subtitle>tldr:</v-card-subtitle>
+                        <v-card-text><% selectedComment.tldr %></v-card-text>
+                        <v-card-subtitle>Comment:</v-card-subtitle>
+                        <v-card-text v-html="selectedComment.comment"></v-card-text>
+                        <v-divider class="my-4"></v-divider>
+                        <v-card-subtitle>Submitted by <% selectedComment.username %> <% selectedComment.time_since_comment %></v-card-subtitle>
                         <!-- <p><% $store.getters.comment_id %></p> -->
+                        <v-divider class="my-4"></v-divider>
+                        <v-btn @click="submitReply = true" small>Reply</v-btn>
                     </v-col>
+                    
+                    
                 </v-row>
             </v-card>
         </v-sheet>
     </v-bottom-sheet>
+    <v-dialog app v-model="submitReply">
+        <v-card>
+            <v-app-bar color="#D6D6D6">
+                <v-btn icon @click="submitReply = false">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+                <v-toolbar-title><span class="title ml-3 mr-5">Reply</span>
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+            </v-app-bar>
+            <v-container fluid>
+                <form>
+                    <v-text-field v-model="submitCommentTldr" label="TLDR"></v-text-field>
+                    <v-textarea v-model="submitComment" label="Comment"></v-textarea>
+                    <v-btn class="mr-4" @click="submit">submit</v-btn>
+                    <v-btn @click="clear">clear</v-btn>
+                </form>
+            </v-container>
+        </v-card>
+    </v-dialog>
     </div>
     </script>
 </head>

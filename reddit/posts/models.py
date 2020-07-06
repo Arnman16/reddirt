@@ -149,6 +149,7 @@ class PostComment(TimeStampedModel):
     user_vote = 0
     user_up_style = ''
     user_down_style = ''
+    tldr = CharField(max_length=56, help_text="Too Long; Didn't Read. Your responce in a nutshell")
     parent = ForeignKey('PostComment', related_name='comment_reply', on_delete=models.CASCADE, null=True, blank=True)
     def children(self):
         return self.comment_reply.all()
