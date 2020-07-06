@@ -1,28 +1,57 @@
 {% extends "base.html" %}
 
 {% block script %}
-postApp.detail_id = 49;
-postApp.showComments()
 
 {% endblock script %}
 
 {% block content %}
 
-    <v-container>
+<v-container fluid ma-0 pa-0>
+    <v-navigation-drawer permanent class="blue lighten-3" dark></v-navigation-drawer>
         <v-row>
             <v-col>
-                <div id="postApp">
-                    <tree-item class="item" :item="treeData" @make-folder="makeFolder"></tree-item>
-                </div>
+                <tree-item class="item" v-on:show-click-details='getSelectedComment' :item="treeData">
+                </tree-item>
             </v-col>
+        </v-navigation-drawer>
             <v-divider vertical></v-divider>
+
             <v-col class="pa-6" cols="6">
-                <div @show-click-details='comment'>
-                    <% comment %>
-                </div>
+                <v-slide-x-transition>
+                    <v-card v-show="!commentVisible">
+                        <v-row>
+                            <v-flex xs2 md2>
+                            <v-col class='text-center'>
+                                <v-sheet ma-5 outlined max-width="50px">
+                                <v-btn icon>
+                                    <v-icon :style=""
+                                        class="upvote"
+                                        @click="">
+                                        arrow_upward
+                                    </v-icon>
+                                </v-btn>
+                                <div class="fuck">
+                                    423</div>
+                                <v-btn icon>
+                                    <v-icon :style=""
+                                        class="downvote"
+                                        @click="">
+                                        arrow_downward
+                                    </v-icon>
+                                </v-btn>
+                            </v-sheet>
+                            </v-col>
+                        </v-flex>
+                            <v-col>
+                                <v-card-text v-html="$store.getters.comment"></v-card-text>
+                                <v-card-text><% $store.getters.comment_username %></v-card-text>
+                                <!-- <p><% $store.getters.comment_id %></p> -->
+                            </v-col>
+                        </v-row>
+                    </v-card>
+                </v-slide-x-transition>
             </v-col>
         </v-row>
-
-    </v-container>
+</v-container>
 
 {% endblock content %}

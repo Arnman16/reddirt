@@ -1,14 +1,45 @@
+
+Vue.use(Vuex)
+
+const store = new Vuex.Store({
+    state: {
+        count: 0,
+        comment: {},
+    },
+    mutations: {
+        increment(state) {
+            state.count++
+        },
+        changeComment(state, payload) {
+            state.comment = payload
+        }
+    },
+    getters: {
+        comment_id: state => {
+            return state.comment.id;
+        },
+        comment: state => {
+            return state.comment.comment;
+        },
+        comment_username: state => {
+            return state.comment.username;
+        }
+    },
+})
 Vue.prototype.$eventBus = new Vue();
 Vue.component("tree-item", {
     template: "#item-template",
     delimiters: ["<%", "%>"],
+    store: store,
     props: {
         item: Object
     },
     data: function () {
         return {
+            commentSelected: {},
             isOpen: false,
-            itemData: [],
+            level: 'grey',
+            sheet: false,
         };
     },
     computed: {
@@ -17,13 +48,58 @@ Vue.component("tree-item", {
         }
     },
     methods: {
+        getColor: function (i) {
+            console.log(i);
+            if(i===0) {
+                return 'deep-purple lighten-4';
+            }
+            if(i===1) {
+                return 'indigo lighten-4'
+            }
+            if(i===2) {
+                return 'blue lighten-4'
+            }
+            if(i===3) {
+                return 'cyan lighten-4'
+            }
+            if(i===4) {
+                return 'teal lighten-4'
+            }
+            if(i===5) {
+                return 'green lighten-4'
+            }
+            if(i===6) {
+                return 'light-green lighten-4'
+            }
+        },
+        getColor2: function (i) {
+            console.log(i);
+            if(i===0) {
+                return 'deep-purple lighten-5';
+            }
+            if(i===1) {
+                return 'indigo lighten-5'
+            }
+            if(i===2) {
+                return 'blue lighten-5'
+            }
+            if(i===3) {
+                return 'cyan lighten-5'
+            }
+            if(i===4) {
+                return 'teal lighten-5'
+            }
+            if(i===5) {
+                return 'green lighten-5'
+            }
+            if(i===6) {
+                return 'light-green lighten-5'
+            }
+        },
         toggle: function () {
             if (this.hasReply) {
                 this.isOpen = !this.isOpen;
-                this.itemData = this.item;
             }
-            const comment = this.item['comment']
-            this.$emit("show-click-details", comment);
 
         },
         makeFolder: function () {
@@ -32,44 +108,30 @@ Vue.component("tree-item", {
                 this.hasReply = true;
             }
         },
-        dothis: function () {
-            this.$emit(this.item)
+        showClickedComment: function () {
+            this.sheet = true;
+            var comment = { 
+                id: this.item.id,
+                comment: this.item.comment_br,
+                username: this.item.username,
+            };
+            console.log("DO THIS")
+            this.$store.commit("changeComment", comment);
+            // this.$emit("show-click-details", this.commentSelected);
         }
     }
 });
-var treeData = {
-    name: "My Tree",
-    children: [
-        { name: "hello" },
-        { name: "wat" },
-        {
-            name: "child folder",
-            children: [
-                {
-                    name: "child folder",
-                    stuff: "this stuff",
-                    children: [{ name: "hello" }, { name: "wat" }]
-                },
-                { name: "hello" },
-                { name: "wat" },
-                {
-                    name: "child folder",
-                    children: [{ name: "hello" }, { name: "wat" }]
-                }
-            ]
-        }
-    ]
-};
 postApp = new Vue({
     el: '#postApp',
     delimiters: ["<%", "%>"],
     vuetify: new Vuetify(),
+    store: store,
     props: {
         source: String,
     },
     data: () => ({
-        treeData: treeData,
-        _treeSampleData: treeData,
+        treeData: {},
+        _treeSampleData: {},
         myPostList: false,
         drawer: false,
         popup: false,
@@ -77,7 +139,9 @@ postApp = new Vue({
         error_alert: false,
         postList: null,
         postListData: null,
-        comment: null,
+        commentVisible: false,
+        sheet: false,
+        comment: '',
         selection: [],
         title: '',
         vote_color: 'red',
@@ -144,6 +208,11 @@ postApp = new Vue({
         },
     },
     methods: {
+        getSelectedComment: function (comment) {
+            console.log('made it here')
+            console.log(comment)
+            this.comment = comment;
+        },
         updateComment: function () {
             this.commentData = this.active[0]['comment'];
         },

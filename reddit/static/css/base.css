@@ -52,13 +52,27 @@ body a:hover {
     padding: none;
     color: pink;
 }
+#commentCard {
+    background-color: #e0e0e0;
+    margin: 0px;
+    padding: 0px;
+}
+#commentCard:focus {
+    background-color: rgb(224, 255, 214);
+}
+#commentCard:hover {
+    background-color: #d3d3d3;
+}
 
 .post-item:hover {
     background-color: rgb(224, 224, 224);
 }
 ul {
     list-style-type: none;
+    padding-left: 1em;
+    line-height: 1.5em;
 }
+
 li {
     list-style-type: none;
 }
