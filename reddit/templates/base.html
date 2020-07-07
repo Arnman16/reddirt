@@ -32,7 +32,8 @@
                     </v-card>
                 
             </div>
-                <v-sheet :color="getColor2(item.level+1)">
+                <!-- <v-sheet :color="getColor2(item.level+1)"> -->
+                
                     <v-scroll-y-transition>
                 <ul v-show="isOpen" v-if="hasReply">
                     <tree-item
@@ -43,7 +44,6 @@
                         @add-item="$emit('add-item', $event)"
                     ></tree-item>
                 </ul></v-scroll-y-transition>
-            </v-sheet>
         
     </li>
     <v-bottom-sheet scrollable v-model="sheet">
@@ -106,6 +106,21 @@
             </v-container>
         </v-card>
     </v-dialog>
+    <div>
+    <v-dialog app v-model="success_alert">
+        <v-card
+        color="green"
+        dark
+        width="150px"
+        type="success"
+        center
+        text
+        dismissible 
+        @click="success_alert = false, sheet = true"
+        >
+            <h3>Success!</h3>
+        </v-card>
+    </v-dialog>
     </div>
     </script>
 </head>
@@ -115,239 +130,265 @@
         <input type="hidden" id="userId" value={{request.user.id}}>
         <v-app id="inspire">
             <v-app id="keep">
-                <v-app-bar app dark clipped-left>
-                    <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-                    <!-- <span class="title ml-3 mr-5">Google&nbsp;<span class="font-weight-light">Keep</span></span> -->
-                    <span class="reddirt-title">
-                        <a href="{% url 'frontpage' %}">
-                            <span class="h4 white--text ml-3 mr-5">Reddirt</span>
-                        </a>
-                    </span>
+                <v-card fill-width fill-height color="rgb(250, 250, 250)">
+                    <v-app-bar app dark clipped-left>
+                        <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+                        <!-- <span class="title ml-3 mr-5">Google&nbsp;<span class="font-weight-light">Keep</span></span> -->
+                        <span class="reddirt-title">
+                            <a href="{% url 'frontpage' %}">
+                                <span class="h4 white--text ml-3 mr-5">Reddirt</span>
+                            </a>
+                        </span>
 
-                    {% if request.user.is_authenticated %}
-
-
-
-                    <span class="title ml-1 mr-1"><span class="font-weight-light">
-                            <% subreddit_name %>
-                        </span></span>
-                    <span class="title"><span class="font-weight-light">
-                            <% postDetailTitle %>
-                        </span></span>
-                    <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search">
-                    </v-text-field> -->
-                    <v-spacer></v-spacer>
-                    {% endif %}
-                </v-app-bar>
-                <v-navigation-drawer app dark v-model="drawer" clipped>
-                    <v-list dense>
-                        <v-divider dark class="my-4"></v-divider>
                         {% if request.user.is_authenticated %}
-                        <v-subheader>
-                            <v-col cols="6">
-                                {{request.user.username}}
-                            </v-col>
-                        </v-subheader>
-                        <div class="my-nav-item" @click="">
-                            <a href="{% url 'users:detail' request.user.username  %}">
-                                <v-list-item>
-                                    <v-list-item-action>
-                                        <v-icon>account_circle
-                                        </v-icon>
-                                    </v-list-item-action>
-                                    <v-list-item-content>
-                                        <v-list-item-title class="white--text">
-                                            Your Profile
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </a>
-                        </div>
-                        <div class="my-nav-item" @click="">
-                            <a href="{% url 'account_logout' %}">
-                                <v-list-item>
-                                    <v-list-item-action>
-                                        <v-icon>logout
-                                        </v-icon>
-                                    </v-list-item-action>
-                                    <v-list-item-content>
-                                        <v-list-item-title class="white--text">
-                                            Sign Out
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </a>
-                        </div>
-                        <v-divider dark class="my-4"></v-divider>
-                        {% else %}
-                        <v-subheader>
-                            <v-col cols="6">
 
-                            </v-col>
-                        </v-subheader>
-                        <div class="my-nav-item" @click="">
-                            <a href="{% url 'account_login' %}">
-                                <v-list-item>
-                                    <v-list-item-action>
-                                        <v-icon>login
-                                        </v-icon>
-                                    </v-list-item-action>
-                                    <v-list-item-content>
-                                        <v-list-item-title class="white--text">
-                                            Sign In
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </a>
-                        </div>
-                        <div class="my-nav-item" @click="">
-                            <a href="{% url 'account_signup' %}">
-                                <v-list-item>
-                                    <v-list-item-action>
-                                        <v-icon>person_outline
-                                        </v-icon>
-                                    </v-list-item-action>
-                                    <v-list-item-content>
-                                        <v-list-item-title class="white--text">
-                                            Sign Up
-                                        </v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                            </a>
-                        </div>
-                        <v-divider dark class="my-4"></v-divider>
+
+
+                        <span class="title ml-1 mr-1"><span class="font-weight-light">
+                                <% subreddit_name %>
+                            </span></span>
+                        <span class="title"><span class="font-weight-light">
+                                <% postDetailTitle %>
+                            </span></span>
+                        <!-- <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search">
+                    </v-text-field> -->
+                        <v-spacer></v-spacer>
                         {% endif %}
-                        {% block menu %}
-                        {% endblock menu %}
-                        <v-divider dark class="my-4"></v-divider>
-                        <div class="my-nav-item" @click="popup = !popup, drawer = !drawer">
-                            <v-list-item>
-                                <v-list-item-action>
-                                    <v-icon>settings
-                                    </v-icon>
-                                </v-list-item-action>
-                                <v-list-item-content>
-                                    <v-list-item-title class="darkgrey--text">
-                                        Settings
-                                    </v-list-item-title>
-                                </v-list-item-content>
-                            </v-list-item>
-                        </div>
-                    </v-list>
-                </v-navigation-drawer>
-                <v-main>
-                    <v-container fluid>
-                        <v-card raised>
-
-                            {% block content %}
-                            {% endblock content %}
-                            {% block login %}
-                            {% endblock login %}
-                        </v-card>
-                    </v-container>
-                    {% if request.user.is_authenticated %}
-
-                    <v-dialog v-model="success_alert">
-                        <v-alert type="success">
-                            Success!
-                        </v-alert>
-                    </v-dialog>
-                    <v-dialog v-model="error_alert">
-                        <v-alert type="error">
-                            Error!
-                        </v-alert>
-                    </v-dialog>
-                    <v-dialog app v-model="popup">
-                        <v-card>
-                            <v-app-bar dark>
-                                <v-btn icon @click="popup = false">
-                                    <v-icon>mdi-close</v-icon>
-                                </v-btn>
-                                <v-toolbar-title><span class="title ml-3 mr-5">Submit Post</span>
-                                </v-toolbar-title>
-                                <v-spacer></v-spacer>
-                            </v-app-bar>
-                            <v-container fluid>
-                                <form>
-                                    <v-text-field v-model="submit_title" label="Title"></v-text-field>
-                                    <v-textarea v-model="submit_description" label="Description"></v-textarea>
-                                    <v-btn class="mr-4" @click="submit">submit</v-btn>
-                                    <v-btn @click="clear">clear</v-btn>
-                                </form>
-                            </v-container>
-                        </v-card>
-                    </v-dialog>
-                    <v-dialog app v-model="edit_post_popup">
-                        <v-card>
-                            <v-app-bar color="#D6D6D6">
-                                <v-btn icon @click="edit_post_popup = false">
-                                    <v-icon>mdi-close</v-icon>
-                                </v-btn>
-                                <v-toolbar-title><span class="title ml-3 mr-5">Submit Post</span>
-                                </v-toolbar-title>
-                                <v-spacer></v-spacer>
-                            </v-app-bar>
-                            <v-container fluid>
-                                <form>
-                                    <v-text-field v-model="postDetailTitle" label="Title"></v-text-field>
-                                    <v-textarea v-model="postDetailDescription" label="Description"></v-textarea>
-                                    <v-btn class="mr-4" @click="edit_post">submit changes</v-btn>
-                                    <v-btn @click="clear">clear</v-btn>
-                                </form>
-                            </v-container>
-                        </v-card>
-                    </v-dialog>
-                    <v-app id="posts_loading" v-if="posts_loading">
-                        <v-container fill-height fluid>
-                            <v-row align="center" justify="center">
-                                <v-col align="center" justify="center">
-                                    <v-progress-circular :size="50" :width="5" color="grey" indeterminate>
-                                    </v-progress-circular>
+                    </v-app-bar>
+                    <v-navigation-drawer app dark v-model="drawer" clipped>
+                        <v-list dense>
+                            <v-divider dark class="my-4"></v-divider>
+                            {% if request.user.is_authenticated %}
+                            <v-subheader>
+                                <v-col cols="6">
+                                    {{request.user.username}}
                                 </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-app>
-                    <v-slide-y-transition>
-                        <div id="myPostList" v-show="!posts_loading" class="postList">
-                            <v-container pa-2 v-for="(post, index) in postList" :index="index" :key="post.id">
+                            </v-subheader>
+                            <div class="my-nav-item" @click="">
+                                <a href="{% url 'users:detail' request.user.username  %}">
+                                    <v-list-item>
+                                        <v-list-item-action>
+                                            <v-icon>account_circle
+                                            </v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-content>
+                                            <v-list-item-title class="white--text">
+                                                Your Profile
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </a>
+                            </div>
+                            <div class="my-nav-item" @click="">
+                                <a href="{% url 'account_logout' %}">
+                                    <v-list-item>
+                                        <v-list-item-action>
+                                            <v-icon>logout
+                                            </v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-content>
+                                            <v-list-item-title class="white--text">
+                                                Sign Out
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </a>
+                            </div>
+                            <v-divider dark class="my-4"></v-divider>
+                            {% else %}
+                            <v-subheader>
+                                <v-col cols="6">
 
-                                <v-layout>
-                                    <v-row class='text-center ma-0'>
-                                        <v-icon large>fa-caret-up</v-icon>
-                                        <v-icon large>fa-caret-down</v-icon>
-                                    </v-row>
-                                    <v-flex xs10 md11 center class="pa-0 ma-0">
-                                        <v-card :color="getPostColor(index)" elevation="4" class="pcard mx-auto pa-0"
-                                            justify-center @click="loadDetailJson(index)" fill-width>
-                                            <v-list-item three-line>
-                                                <v-list-item-content>
-                                                    <div class="overline mb-1"><% post.score %></div>
-                                                    <div class="overline mb-1"><% post.subreddit_name %></div>
-                                                    <v-list-item-title class="h6 mb-1"><% post.title %>
-                                                    </v-list-item-title>
-                                                    <v-list-item-subtitle>posted by <a
-                                                            v-bind:href="post.owner_url"><% post.username %></a>
-                                                        <% post.time_since_post %></v-list-item-subtitle>
-                                                </v-list-item-content>
-                                                <v-list-item-avatar tile size="80">
+                                </v-col>
+                            </v-subheader>
+                            <div class="my-nav-item" @click="">
+                                <a href="{% url 'account_login' %}">
+                                    <v-list-item>
+                                        <v-list-item-action>
+                                            <v-icon>login
+                                            </v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-content>
+                                            <v-list-item-title class="white--text">
+                                                Sign In
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </a>
+                            </div>
+                            <div class="my-nav-item" @click="">
+                                <a href="{% url 'account_signup' %}">
+                                    <v-list-item>
+                                        <v-list-item-action>
+                                            <v-icon>person_outline
+                                            </v-icon>
+                                        </v-list-item-action>
+                                        <v-list-item-content>
+                                            <v-list-item-title class="white--text">
+                                                Sign Up
+                                            </v-list-item-title>
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </a>
+                            </div>
+                            <v-divider dark class="my-4"></v-divider>
+                            {% endif %}
+                            {% block menu %}
+                            {% endblock menu %}
+                            <v-divider dark class="my-4"></v-divider>
+                            <div class="my-nav-item" @click="popup = !popup, drawer = !drawer">
+                                <v-list-item>
+                                    <v-list-item-action>
+                                        <v-icon>settings
+                                        </v-icon>
+                                    </v-list-item-action>
+                                    <v-list-item-content>
+                                        <v-list-item-title class="darkgrey--text">
+                                            Settings
+                                        </v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </div>
+                        </v-list>
+                    </v-navigation-drawer>
+                    <v-main>
+                        <v-container dark fluid>
+                            <v-card raised>
+
+                                {% block content %}
+                                {% endblock content %}
+                                {% block login %}
+                                {% endblock login %}
+                            </v-card>
+                        </v-container>
+                        {% if request.user.is_authenticated %}
+
+                        <v-dialog v-model="success_alert">
+                            <v-alert type="success">
+                                Success!
+                            </v-alert>
+                        </v-dialog>
+                        <v-dialog v-model="error_alert">
+                            <v-alert type="error">
+                                Error!
+                            </v-alert>
+                        </v-dialog>
+                        <v-dialog app v-model="popup">
+                            <v-card>
+                                <v-app-bar dark>
+                                    <v-btn icon @click="popup = false">
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-btn>
+                                    <v-toolbar-title><span class="title ml-3 mr-5">Submit Post</span>
+                                    </v-toolbar-title>
+                                    <v-spacer></v-spacer>
+                                </v-app-bar>
+                                <v-container fluid>
+                                    <form>
+                                        <v-text-field v-model="submit_title" label="Title"></v-text-field>
+                                        <v-textarea v-model="submit_description" label="Description"></v-textarea>
+                                        <v-btn class="mr-4" @click="submit">submit</v-btn>
+                                        <v-btn @click="clear">clear</v-btn>
+                                    </form>
+                                </v-container>
+                            </v-card>
+                        </v-dialog>
+                        <v-dialog app v-model="edit_post_popup">
+                            <v-card>
+                                <v-app-bar color="#D6D6D6">
+                                    <v-btn icon @click="edit_post_popup = false">
+                                        <v-icon>mdi-close</v-icon>
+                                    </v-btn>
+                                    <v-toolbar-title><span class="title ml-3 mr-5">Submit Post</span>
+                                    </v-toolbar-title>
+                                    <v-spacer></v-spacer>
+                                </v-app-bar>
+                                <v-container fluid>
+                                    <form>
+                                        <v-text-field v-model="postDetailTitle" label="Title"></v-text-field>
+                                        <v-textarea v-model="postDetailDescription" label="Description"></v-textarea>
+                                        <v-btn class="mr-4" @click="edit_post">submit changes</v-btn>
+                                        <v-btn @click="clear">clear</v-btn>
+                                    </form>
+                                </v-container>
+                            </v-card>
+                        </v-dialog>
+                        <v-app id="posts_loading" v-if="posts_loading">
+                            <v-container fill-height fluid>
+                                <v-row align="center" justify="center">
+                                    <v-col align="center" justify="center">
+                                        <v-progress-circular :size="50" :width="5" color="grey" indeterminate>
+                                        </v-progress-circular>
+                                    </v-col>
+                                </v-row>
+                            </v-container>
+                        </v-app>
+                        <v-slide-y-transition>
+                            <div id="myPostList" v-show="!posts_loading" class="postList">
+                                <v-container pa-2 v-for="(post, index) in postList" :index="index" :key="post.id">
+                                    <v-layout>
+                                        <v-flex xs12 md12 center class="pa-0 ma-0">
+                                            <v-card hover :color="getPostColor(index)" class="pcard mx-auto pa-0"
+                                                justify-center fill-width max-width="800">
+                                                <v-list-item three-line @click="loadDetailJson(index)">
+                                                    <v-list-item-content class="text-center">
+                                                        <div class="overline mb-0"><% post.subreddit_name %></div>
+                                                        <div class="text-lg-h5 text-md-body-1 text-sm-body-2 mb-6 mt-6">
+                                                            <% post.title %>
+                                                        </div>
+                                                        <v-list-item-subtitle id="card_user"><a
+                                                                v-bind:href="post.owner_url"><% post.username %></a>
+                                                            <% post.time_since_post %></v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                    <!-- <v-list-item-avatar tile size="80">
                                                     <v-icon size="40">
                                                         text_snippet
                                                     </v-icon>
-                                                </v-list-item-avatar>
-                                            </v-list-item>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-flex>
-                                </v-layout>
-                            </v-container>
-                        </div>
-                    </v-slide-y-transition>
-                </v-main>
+                                                </v-list-item-avatar> -->
+                                                </v-list-item>
+                                                <!-- <v-divider class="ma-0"></v-divider> -->
+                                                <v-card color='rgba(240, 240, 240, 0.6)' flat
+                                                    class="ma-0 ba-0 fill-width">
+                                                    <v-card-actions>
+                                                        <v-row class='d-flex text-center ma-0'>
+                                                            <v-spacer></v-spacer>
+                                                            <v-spacer></v-spacer>
+                                                            <v-card min-width="140" ml-5 mr-5 max-height="40" outlined>
+                                                                <v-row class='text-center ml-3 mr-3'>
+                                                                    <v-btn icon color="grey lighten-2">
+                                                                        <v-icon>fa-arrow-up</v-icon>
+                                                                    </v-btn>
+                                                                    <v-spacer></v-spacer>
+                                                                    <div class="ma-1 text-center justify-center">
+                                                                        <div
+                                                                            class="text-lg-h5 text-md-body-1 text-sm-body-2">
+                                                                            <% post.score %>
+                                                                        </div>
+                                                                    </div>
+                                                                    <v-spacer></v-spacer>
+                                                                    <v-btn icon color="grey lighten-2">
+                                                                        <v-icon>fa-arrow-down</v-icon>
+                                                                    </v-btn>
+                                                                </v-row>
+                                                            </v-card>
+                                                            <v-spacer></v-spacer>
+                                                            <v-spacer></v-spacer>
+                                                        </v-row>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-card>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-container>
+                            </div>
+                        </v-slide-y-transition>
+                    </v-main>
+                </v-card>
             </v-app>
         </v-app>
         <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay
             transition="dialog-bottom-transition">
-            <v-card :color="getPostColor(detail_index)" fill-height>
+            <v-card :color="getPostColor2(detail_index)" fill-height>
                 <v-app-bar app dark>
                     <v-btn icon @click="close_post">
                         <v-icon>mdi-close</v-icon>
@@ -358,59 +399,60 @@
                     <v-spacer></v-spacer>
                 </v-app-bar>
                 <v-main>
-                    
-                        
-                        
-                            
-                                <v-card elevation="3" color='rgba(255, 255, 255, 0.2)' rounded class="pa-10 ma-4">
-                                    <v-container>
-                                    <v-layout row>
-                                        
-                                    <v-flex xs1 md1 mt-2 mb-2>
-                                        <v-col align='center' justify-center>
-                                            <div>
-                                                <v-flex xs4 md4>
-                                                    <v-icon :style="postDetailData.user_up_style"
-                                                        :id="'upvote-' + postDetailData.id" class="upvote"
-                                                        @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
-                                                        arrow_upward
-                                                    </v-icon>
-                                                </v-flex>
-                                                <v-flex xs4 md4>
-                                                    <div justify-center align="center" ma-0 :id="'score-' + postDetailData.id"
-                                                        class="text-center"><% postDetailData.score %></text></div>
-                                                </v-flex>
-                                                <v-flex xs4 md4>
-                                                    <v-icon :style="postDetailData.user_down_style"
-                                                        :id="'downvote-' + postDetailData.id" class="downvote"
-                                                        @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
-                                                        arrow_downward
-                                                    </v-icon>
-                                                </v-flex>
-                                            </div>
-                                        
-                                    </v-flex>
+
+
+
+
+                    <v-card elevation="3" color='rgba(255, 255, 255, 0.5)' rounded class="pa-10 ma-4">
+                        <v-container>
+                            <v-layout row>
+
+                                <v-flex xs1 md1 mt-2 mb-2>
+                                    <v-col align='center' justify-center>
+                                        <div>
+                                            <v-flex xs4 md4>
+                                                <v-icon :style="postDetailData.user_up_style"
+                                                    :id="'upvote-' + postDetailData.id" class="upvote"
+                                                    @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
+                                                    arrow_upward
+                                                </v-icon>
+                                            </v-flex>
+                                            <v-flex xs4 md4>
+                                                <div justify-center align="center" ma-0
+                                                    :id="'score-' + postDetailData.id" class="text-center">
+                                                    <% postDetailData.score %></text></div>
+                                            </v-flex>
+                                            <v-flex xs4 md4>
+                                                <v-icon :style="postDetailData.user_down_style"
+                                                    :id="'downvote-' + postDetailData.id" class="downvote"
+                                                    @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
+                                                    arrow_downward
+                                                </v-icon>
+                                            </v-flex>
+                                        </div>
+
+                                </v-flex>
                                 </v-col>
-                                    <v-col>
+                                <v-col>
                                     <v-flex xs11 md11>
-                                    <h4 class="display-5"><% postDetailData.title %></h4>
-                                    <div v-if="postDetailData.owner == {{request.user.id}}">
-                                        <v-btn  @click="edit_post_popup = true" small>EDIT</v-btn>
-                                    </div>
-                                    <hr class="my-2">
-                                    <p class="lead">
-                                    <div v-html="postDetailData.description_br"></div>
-                                    </p>
-                                    <hr class="my-2">
-                                    <span class="font-weight-light">
-                                        <p>Posted by <strong><% postDetailData.username %></strong></p>
-                                        <p>Last modified: <% postDetailData.time_since_post %></p>
-                                    </span>
+                                        <h4 class="display-5"><% postDetailData.title %></h4>
+                                        <div v-if="postDetailData.owner == {{request.user.id}}">
+                                            <v-btn @click="edit_post_popup = true" small>EDIT</v-btn>
+                                        </div>
+                                        <hr class="my-2">
+                                        <p class="lead">
+                                        <div v-html="postDetailData.description_br"></div>
+                                        </p>
+                                        <hr class="my-2">
+                                        <span class="font-weight-light">
+                                            <p>Posted by <strong><% postDetailData.username %></strong></p>
+                                            <p>Last modified: <% postDetailData.time_since_post %></p>
+                                        </span>
                                 </v-col>
-                        </v-flex>
-                    </v-layout>
-                </v-card>
-            </v-container>
+                                </v-flex>
+                            </v-layout>
+                    </v-card>
+                    </v-container>
                     <tree-item class="item" v-on:show-click-details='getSelectedComment' :item="treeData">
                     </tree-item>
                     </v-sheet>

@@ -45,6 +45,8 @@ Vue.component("tree-item", {
             submitComment: '',
             submitReplyToId: null,
             selectedComment: {},
+            success_alert: false,
+            newCommentId: '',
         };
     },
     computed: {
@@ -94,9 +96,8 @@ Vue.component("tree-item", {
             }
         },
         submit: async function () {
-            var success_bool = await this.submit_func();
-            if (success_bool) {
-                alert('success!')
+            var success_data = await this.submit_func();
+            if (success_data) {
                 this.submitReply = false;
                 if (this.item.level || this.item.level == 0) {
                     level = this.item.level + 1;
@@ -105,14 +106,23 @@ Vue.component("tree-item", {
                     level = 0;
                 }
                 this.item.children.push({
-                    tldr: this.submitCommentTldr,
-                    comment: this.submitComment,
-                    post_id: this.selectedComment.post_id,
-                    parent: this.selectedComment.id,
+                    tldr: success_data['tldr'],
+                    comment: success_data['comment'],
+                    post_id: success_data['post_id'],
+                    parent: success_data['parent'],
                     time_since_comment: 'just now.',
                     children: [],
-                    level: level,
+                    level: success_data['level'],
+                    id: success_data['id'],
+                    username: success_data['username'],
+                    owner_url: success_data['owner_url'],
+                    comment_br: success_data['comment_br'],
                 });
+                this.success_alert = true;
+                this.newCommentId = success_data['id'];
+                this.sheet = false;
+                this.selectedComment = success_data;
+                
             }
             else {
                 alert('oops!')
@@ -182,8 +192,6 @@ Vue.component("tree-item", {
             }
         },
         showClickedComment: function () {
-            console.log(this.item.id)
-            console.log(this.item.post_id)
             if (this.item.id) {
                 this.sheet = true;
                 var comment = {
@@ -284,6 +292,38 @@ postApp = new Vue({
         active: [],
         colorList: [ {
             color:
+            "blue lighten-4",
+        },{
+            color:            
+            "light-blue lighten-4",
+        },{
+            color:   
+            "cyan lighten-4",
+        },{
+            color:   
+            "teal lighten-4",
+        },{
+            color:   
+            "green lighten-4",
+        },{
+            color:   
+            "light-green lighten-4",
+        },{
+            color:   
+            "green lighten-4",
+        },{
+            color:   
+            "teal lighten-4",
+        },{
+            color:   
+            "cyan lighten-4",
+        },{
+            color:   
+            "light-blue lighten-4",
+        },
+        ],
+        colorList2: [ {
+            color:
             "blue lighten-5",
         },{
             color:            
@@ -335,7 +375,11 @@ postApp = new Vue({
         getPostColor: function (index) {
             const colors = this.colorList;
             var i = index % 10;
-            console.log(colors[i].color)
+            return colors[i].color;
+        },
+        getPostColor2: function (index) {
+            const colors = this.colorList2;
+            var i = index % 10;
             return colors[i].color;
         },
         getSelectedComment: function (comment) {
