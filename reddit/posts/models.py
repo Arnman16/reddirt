@@ -34,7 +34,6 @@ class Subreddit(TimeStampedModel):
     def __str__(self):
         return str(self.slug)
 
-
 class Post(TimeStampedModel):
     title = CharField(max_length=32, help_text='Enter Post Title')
     link = URLField("Submit link to content", blank=True)
@@ -55,7 +54,6 @@ class Post(TimeStampedModel):
     user_vote = 0
     user_up_style = ''
     user_down_style = ''
-
     # Metadata
     class Meta:
         ordering = ['-modified']
@@ -81,17 +79,23 @@ class Post(TimeStampedModel):
         return self.subreddit.name
 
     def time_since_post(self):
+        e = ''
+        if self.modified != self.created:
+            e = '*'
         time_now = datetime.now(timezone.utc)
         diff_time = time_now - self.modified
-        diff_days, diff_hours = str(diff_time.days), str(int(diff_time.seconds / 3600))
+        diff_days, diff_hours, diff_mins = str(diff_time.days), str(int(diff_time.seconds / 3600)), str(int(diff_time.seconds / 60))
         if diff_days == '0':
+            if int(diff_mins) < 60:
+                if diff_mins == '1':
+                    return e+'1 minute ago.'
+                return e+diff_mins + ' minutes ago.'
             if diff_hours == '1':
-                return '1 hour ago'
-            return diff_hours + ' hours ago.'
-        else:
-            if diff_days == '1':
-                return '1 day ago.'
-            return diff_days + ' days ago.'
+                return e+'1 hour ago'
+            return e+diff_hours + ' hours ago.'
+        if diff_days == '1':
+            return e+'1 day ago.'
+        return e+diff_days + ' days ago.'
 
     def owner_url(self):
         return '/users/' + self.owner.username
@@ -110,6 +114,23 @@ class Post(TimeStampedModel):
             score = score + vote.vote
         return score
     score = score
+
+
+    def age_in_days(self):
+        time_now = datetime.now(timezone.utc)
+        diff_time = time_now - self.created
+        days_since_post, secs_since_post = diff_time.days, diff_time.seconds
+        days_since_post_float = secs_since_post / 86400 + days_since_post
+        return days_since_post_float
+
+    def weighted_score(self):
+        if self.score() == 0:
+            return 0
+        time_now = datetime.now(timezone.utc)
+        diff_time = time_now - self.created
+        days_since_post, secs_since_post = diff_time.days, diff_time.seconds
+        days_since_post_float = secs_since_post / 86400 + days_since_post
+        return self.score() / days_since_post_float
 
     subreddit_slug = get_subreddit
     full_url = get_full_url

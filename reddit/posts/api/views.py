@@ -4,8 +4,9 @@ from rest_framework.decorators import action
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, UpdateModelMixin, CreateModelMixin, DestroyModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from django_filters import rest_framework as filters
+from rest_framework.filters import OrderingFilter
 
 from .serializers import PostSerializer, AllPostsSerializer, PostVotesSerializer, CommentSerializer
 from ..models import Post, Subreddit, PostVotes, PostComment
@@ -21,15 +22,17 @@ class VoteFilter(filters.FilterSet):
         model = PostVotes
         fields = ['postid_in', ]
 
+
 class PostViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet, CreateModelMixin, DestroyModelMixin):
     serializer_class = PostSerializer
-    queryset = Post.objects.all().order_by('-id')
+    queryset = Post.objects.all()
     lookup_field = "id"
     pagination_class = None
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = [
         'subreddit',
     ]
+    ordering_fields = ['created', 'id']
 
     def get_queryset(self, *args, **kwargs):
         return self.queryset.filter(owner=self.request.user.id)
@@ -41,13 +44,15 @@ class PostViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericV
 
 class AllPostsViewSet(RetrieveModelMixin, ListModelMixin, GenericViewSet):
     serializer_class = AllPostsSerializer
-    queryset = Post.objects.all().order_by('-id')
+    queryset = Post.objects.all()
     lookup_field = "id"
     pagination_class = None
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = [
         'subreddit',
     ]
+
+    ordering_fields = ['created', 'id']
 
     @action(detail=False, methods=["GET"])
     def me(self, request):

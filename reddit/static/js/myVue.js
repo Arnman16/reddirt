@@ -56,7 +56,7 @@ Vue.component("tree-item", {
         submit_func: function () {
             axios.defaults.xsrfCookieName = 'csrftoken';
             axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-            if(this.item.id) {
+            if (this.item.id) {
                 console.log(this.selectedComment)
                 return axios.post('/api/comments/', {
                     tldr: this.submitCommentTldr,
@@ -71,34 +71,34 @@ Vue.component("tree-item", {
                     .catch(function (error) {
                         console.log(error);
                         return false;
-    
+
                     });
-                }
-                else {
-                    console.log(this.selectedComment)
-                    return axios.post('/api/comments/', {
-                        tldr: this.submitCommentTldr,
-                        comment: this.submitComment,
-                        post_id: this.selectedComment.post_id,
-                        parent: this.selectedComment.id,
+            }
+            else {
+                console.log(this.selectedComment)
+                return axios.post('/api/comments/', {
+                    tldr: this.submitCommentTldr,
+                    comment: this.submitComment,
+                    post_id: this.selectedComment.post_id,
+                    parent: this.selectedComment.id,
+                })
+                    .then(function (response) {
+                        console.log(response);
+                        return response.data;
                     })
-                        .then(function (response) {
-                            console.log(response);
-                            return response.data;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                            return false;
-        
-                        });
-                }
+                    .catch(function (error) {
+                        console.log(error);
+                        return false;
+
+                    });
+            }
         },
         submit: async function () {
             var success_bool = await this.submit_func();
             if (success_bool) {
                 alert('success!')
                 this.submitReply = false;
-                if (this.item.level || this.item.level==0) {
+                if (this.item.level || this.item.level == 0) {
                     level = this.item.level + 1;
                 }
                 else {
@@ -124,48 +124,48 @@ Vue.component("tree-item", {
             this.submitComment = ''
         },
         getColor: function (i) {
-            if(i===0) {
+            if (i === 0) {
                 return 'deep-purple lighten-4';
             }
-            if(i===1) {
+            if (i === 1) {
                 return 'indigo lighten-4'
             }
-            if(i===2) {
+            if (i === 2) {
                 return 'blue lighten-4'
             }
-            if(i===3) {
+            if (i === 3) {
                 return 'cyan lighten-4'
             }
-            if(i===4) {
+            if (i === 4) {
                 return 'teal lighten-4'
             }
-            if(i===5) {
+            if (i === 5) {
                 return 'green lighten-4'
             }
-            if(i===6) {
+            if (i === 6) {
                 return 'light-green lighten-4'
             }
         },
         getColor2: function (i) {
-            if(i===0) {
+            if (i === 0) {
                 return 'deep-purple lighten-5';
             }
-            if(i===1) {
+            if (i === 1) {
                 return 'indigo lighten-5'
             }
-            if(i===2) {
+            if (i === 2) {
                 return 'blue lighten-5'
             }
-            if(i===3) {
+            if (i === 3) {
                 return 'cyan lighten-5'
             }
-            if(i===4) {
+            if (i === 4) {
                 return 'teal lighten-5'
             }
-            if(i===5) {
+            if (i === 5) {
                 return 'green lighten-5'
             }
-            if(i===6) {
+            if (i === 6) {
                 return 'light-green lighten-5'
             }
         },
@@ -184,9 +184,9 @@ Vue.component("tree-item", {
         showClickedComment: function () {
             console.log(this.item.id)
             console.log(this.item.post_id)
-            if(this.item.id) {
+            if (this.item.id) {
                 this.sheet = true;
-                var comment = { 
+                var comment = {
                     id: this.item.id,
                     comment: this.item.comment_br,
                     username: this.item.username,
@@ -200,7 +200,7 @@ Vue.component("tree-item", {
                 // this.$emit("show-click-details", this.commentSelected);
             }
             else {
-                var comment = { 
+                var comment = {
                     id: null,
                     comment: '',
                     username: '',
@@ -282,6 +282,38 @@ postApp = new Vue({
         commentData: [],
         edit_post_popup: false,
         active: [],
+        colorList: [ {
+            color:
+            "purple lighten-5",
+        },{
+            color:            
+            "deep-purple lighten-5",
+        },{
+            color:   
+            "indigo lighten-5",
+        },{
+            color:   
+            "blue lighten-5",
+        },{
+            color:   
+            "light-blue lighten-5",
+        },{
+            color:   
+            "cyan lighten-5",
+        },{
+            color:   
+            "light-blue lighten-5",
+        },{
+            color:   
+            "blue lighten-5",
+        },{
+            color:   
+            "indigo lighten-5",
+        },{
+            color:   
+            "deep-purple lighten-5",
+        },
+        ],
         upvote_style: {
             color: "orange",
         },
@@ -300,6 +332,12 @@ postApp = new Vue({
         },
     },
     methods: {
+        getPostColor: function (index) {
+            const colors = this.colorList;
+            var i = index % 10;
+            console.log(colors[i].color)
+            return colors[i].color;
+        },
         getSelectedComment: function (comment) {
             console.log('made it here')
             console.log(comment)
@@ -351,7 +389,7 @@ postApp = new Vue({
         },
         showPosts: async function () {
             if (this.postListData) {
-                this.postList = await this.postListData;
+                this.postList = this.sortByScore(await this.postListData);
                 var user_id = document.getElementById("userId").value;
                 window.history.pushState("object or string", "Title", this.subreddit_url);
                 this.postIdList = '';
@@ -709,6 +747,11 @@ postApp = new Vue({
         addItem: function (item) {
             item.children.push({
                 name: "new stuff"
+            });
+        },
+        sortByScore: function (arr) {
+            return arr.slice().sort(function (a, b) {
+                return b.weighted_score - a.weighted_score;
             });
         }
     }

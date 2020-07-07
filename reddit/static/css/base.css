@@ -53,16 +53,15 @@ body a:hover {
     color: pink;
 }
 #commentCard {
-    background-color: #e0e0e0;
     margin: 0px;
     padding: 0px;
 }
 #commentCard:focus {
     background-color: rgb(224, 255, 214);
 }
-#commentCard:hover {
+/* #commentCard:hover {
     background-color: #d3d3d3;
-}
+} */
 
 .post-item:hover {
     background-color: rgb(224, 224, 224);
@@ -83,7 +82,7 @@ li {
 }
 
 .my-nav-item:hover {
-    background-color: rgb(94, 81, 63);
+    background-color: rgb(43, 43, 43);
 }
 
 #demo {
@@ -107,12 +106,4 @@ li {
 
 .jumbotron {
     background-color: #d5d0c9;
-}
-
-#myPostList.postList:nth-child(odd) .pcard {
-    background-color: #d5d0c9;
-}
-
-#myPostList.postList:nth-child(even) .pcard {
-    background-color: #cecbc5;
 }

@@ -43,7 +43,7 @@ class PostVotesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PostVotes
-        fields = ['post_id', 'user_id', 'vote', 'up_color', 'down_color', 'id',
+        fields = ['post_id', 'user_id', 'vote', 'id',
                   ]
 
 
@@ -51,6 +51,7 @@ class AllPostsSerializer(serializers.ModelSerializer):
     subreddit = serializers.PrimaryKeyRelatedField(
         queryset=Subreddit.objects.all()
     )
+    queryset = Post.objects.all()
 
     class Meta:
         model = Post
@@ -75,6 +76,8 @@ class AllPostsSerializer(serializers.ModelSerializer):
             'user_vote',
             'user_up_style',
             'user_down_style',
+            'weighted_score',
+            'age_in_days',
         ]
         extra_kwargs = {
             "url": {"view_name": "api:allposts", "lookup_field": "title"}

@@ -56,14 +56,14 @@
                             <v-sheet ma-5 outlined max-width="50px">
                                 <v-btn icon>
                                     <v-icon :style="" class="upvote" @click="">
-                                        arrow_upward
+                                        mdi-arrow_upward
                                     </v-icon>
                                 </v-btn>
                                 <div class="fuck">
                                     423</div>
                                 <v-btn icon>
                                     <v-icon :style="" class="downvote" @click="">
-                                        arrow_downward
+                                        mdi-arrow_downward
                                     </v-icon>
                                 </v-btn>
                             </v-sheet>
@@ -88,7 +88,7 @@
     </v-bottom-sheet>
     <v-dialog app v-model="submitReply">
         <v-card>
-            <v-app-bar color="#D6D6D6">
+            <v-app-bar dark>
                 <v-btn icon @click="submitReply = false">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -115,7 +115,7 @@
         <input type="hidden" id="userId" value={{request.user.id}}>
         <v-app id="inspire">
             <v-app id="keep">
-                <v-app-bar app dark color="rgb(66, 52, 34)" clipped-left>
+                <v-app-bar app dark clipped-left>
                     <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
                     <!-- <span class="title ml-3 mr-5">Google&nbsp;<span class="font-weight-light">Keep</span></span> -->
                     <span class="reddirt-title">
@@ -139,8 +139,8 @@
                     <v-spacer></v-spacer>
                     {% endif %}
                 </v-app-bar>
-                <v-navigation-drawer app dark v-model="drawer" clipped color="rgb(79, 65, 47)">
-                    <v-list dense color="rgb(79, 65, 47)">
+                <v-navigation-drawer app dark v-model="drawer" clipped>
+                    <v-list dense>
                         <v-divider dark class="my-4"></v-divider>
                         {% if request.user.is_authenticated %}
                         <v-subheader>
@@ -259,7 +259,7 @@
                     </v-dialog>
                     <v-dialog app v-model="popup">
                         <v-card>
-                            <v-app-bar color="#D6D6D6">
+                            <v-app-bar dark>
                                 <v-btn icon @click="popup = false">
                                     <v-icon>mdi-close</v-icon>
                                 </v-btn>
@@ -309,18 +309,19 @@
                     </v-app>
                     <v-slide-y-transition>
                         <div id="myPostList" v-show="!posts_loading" class="postList">
-                            <v-container class="pa-4" fluid v-for="(post, index) in postList" :index="index"
-                                :key="post.id">
+                            <v-container pa-2 v-for="(post, index) in postList" :index="index" :key="post.id">
 
                                 <v-layout>
                                     <v-row class='text-center ma-0'>
-
+                                        <v-icon large>fa-caret-up</v-icon>
+                                        <v-icon large>fa-caret-down</v-icon>
                                     </v-row>
                                     <v-flex xs10 md11 center class="pa-0 ma-0">
-                                        <v-card class="pcard mx-auto pa-0" justify-center @click="loadDetailJson(index)"
-                                            fill-width outlined>
+                                        <v-card :color="getPostColor(index)" elevation="4" class="pcard mx-auto pa-0"
+                                            justify-center @click="loadDetailJson(index)" fill-width>
                                             <v-list-item three-line>
                                                 <v-list-item-content>
+                                                    <div class="overline mb-1"><% post.score %></div>
                                                     <div class="overline mb-1"><% post.subreddit_name %></div>
                                                     <v-list-item-title class="h6 mb-1"><% post.title %>
                                                     </v-list-item-title>
@@ -344,51 +345,57 @@
                 </v-main>
             </v-app>
         </v-app>
-        <v-dialog app v-model="postDetail" persistent fullscreen hide-overlay transition="dialog-bottom-transition">
-            <v-card fill-height>
-            <v-app-bar app dark color="rgb(66, 52, 34)">
-                <v-btn icon @click="close_post">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-                <v-toolbar-title><span
-                        class="title ml-3 mr-5"><% postDetailData.subreddit_name %></span><% postDetailData.title %>
-                </v-toolbar-title>
-                <v-spacer></v-spacer>
-            </v-app-bar>
-            <v-main>
-                
-                <div class="jumbotron jumbotron-fluid">
-                    <v-layout row>
-                        <v-flex xs2 md1 mt-2 mb-2>
-                            <v-col align='center' justify-center>
-                                <div>
-                                    <v-flex xs4 md4>
-                                        <v-icon :style="postDetailData.user_up_style"
-                                            :id="'upvote-' + postDetailData.id" class="upvote"
-                                            @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
-                                            arrow_upward
-                                        </v-icon>
+        <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay
+            transition="dialog-bottom-transition">
+            <v-card :color="getPostColor(detail_index)" fill-height>
+                <v-app-bar app dark>
+                    <v-btn icon @click="close_post">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                    <v-toolbar-title><span
+                            class="title ml-3 mr-5"><% postDetailData.subreddit_name %></span><% postDetailData.title %>
+                    </v-toolbar-title>
+                    <v-spacer></v-spacer>
+                </v-app-bar>
+                <v-main>
+                    
+                        
+                        
+                            
+                                <v-card elevation="3" color='rgba(255, 255, 255, 0.2)' rounded class="pa-10 ma-4">
+                                    <v-container>
+                                    <v-layout row>
+                                        
+                                    <v-flex xs1 md1 mt-2 mb-2>
+                                        <v-col align='center' justify-center>
+                                            <div>
+                                                <v-flex xs4 md4>
+                                                    <v-icon :style="postDetailData.user_up_style"
+                                                        :id="'upvote-' + postDetailData.id" class="upvote"
+                                                        @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
+                                                        arrow_upward
+                                                    </v-icon>
+                                                </v-flex>
+                                                <v-flex xs4 md4>
+                                                    <div justify-center align="center" ma-0 :id="'score-' + postDetailData.id"
+                                                        class="text-center"><% postDetailData.score %></text></div>
+                                                </v-flex>
+                                                <v-flex xs4 md4>
+                                                    <v-icon :style="postDetailData.user_down_style"
+                                                        :id="'downvote-' + postDetailData.id" class="downvote"
+                                                        @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
+                                                        arrow_downward
+                                                    </v-icon>
+                                                </v-flex>
+                                            </div>
+                                        
                                     </v-flex>
-                                    <v-flex xs4 md4>
-                                        <div justify-center align="center" ma-0 :id="'score-' + postDetailData.id"
-                                            class="text-center"><% postDetailData.score %></text></div>
-                                    </v-flex>
-                                    <v-flex xs4 md4>
-                                        <v-icon :style="postDetailData.user_down_style"
-                                            :id="'downvote-' + postDetailData.id" class="downvote"
-                                            @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
-                                            arrow_downward
-                                        </v-icon>
-                                    </v-flex>
-                                </div>
-                            </v-col>
-                        </v-flex>
-                        <v-flex xs10 md11>
-                            <v-container>
-                                <v-card flat rounded class="pa-5 mr-5">
+                                </v-col>
+                                    <v-col>
+                                    <v-flex xs11 md11>
                                     <h4 class="display-5"><% postDetailData.title %></h4>
                                     <div v-if="postDetailData.owner == {{request.user.id}}">
-                                        <v-btn @click="edit_post_popup = true" small>EDIT</v-btn>
+                                        <v-btn  @click="edit_post_popup = true" small>EDIT</v-btn>
                                     </div>
                                     <hr class="my-2">
                                     <p class="lead">
@@ -399,18 +406,16 @@
                                         <p>Posted by <strong><% postDetailData.username %></strong></p>
                                         <p>Last modified: <% postDetailData.time_since_post %></p>
                                     </span>
-                                </v-card>
-                            </v-container>
-                        </v-flex>>
+                                </v-col>
+                        </v-flex>
                     </v-layout>
-                </div>
-            
-
+                </v-card>
+            </v-container>
                     <tree-item class="item" v-on:show-click-details='getSelectedComment' :item="treeData">
                     </tree-item>
-                </v-sheet>
-            </v-main>
-        </v-card>
+                    </v-sheet>
+                </v-main>
+            </v-card>
         </v-dialog>
 
         {% endif %}
