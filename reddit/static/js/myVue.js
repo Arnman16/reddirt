@@ -284,34 +284,34 @@ postApp = new Vue({
         active: [],
         colorList: [ {
             color:
-            "purple lighten-5",
-        },{
-            color:            
-            "deep-purple lighten-5",
-        },{
-            color:   
-            "indigo lighten-5",
-        },{
-            color:   
             "blue lighten-5",
         },{
-            color:   
+            color:            
             "light-blue lighten-5",
         },{
             color:   
             "cyan lighten-5",
         },{
             color:   
+            "teal lighten-5",
+        },{
+            color:   
+            "green lighten-5",
+        },{
+            color:   
+            "light-green lighten-5",
+        },{
+            color:   
+            "green lighten-5",
+        },{
+            color:   
+            "teal lighten-5",
+        },{
+            color:   
+            "cyan lighten-5",
+        },{
+            color:   
             "light-blue lighten-5",
-        },{
-            color:   
-            "blue lighten-5",
-        },{
-            color:   
-            "indigo lighten-5",
-        },{
-            color:   
-            "deep-purple lighten-5",
         },
         ],
         upvote_style: {
