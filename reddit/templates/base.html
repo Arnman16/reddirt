@@ -13,7 +13,6 @@
     <!-- <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> -->
     <script type="text/x-template" id="item-template">
         <div container>
-            
             <li>
                 <div
                     :class="{bold: hasReply}"
@@ -25,13 +24,18 @@
                                 <v-flex xs1 md1>
                                 <v-col class="ma-1 pa-0"><span v-if="hasReply"><v-icon @click="toggle"><% isOpen ? 'remove' : 'add' %></v-icon></span></v-col>
                                 </v-flex>
-                                <v-col class="ma-1 pa-0"><v-card-text @dblclick="showClickedComment" @click="toggle" class="ma-1 pa-0"><% item.tldr %></v-card-text></v-col>
+                                <v-col class="ma-1 pa-0">
+                                    <v-card-text @dblclick="showClickedComment" @click="toggle" class="ma-1 pa-0">
+                                        <span v-if="item.username"><strong><% item.username %>:</strong></span>
+                                        <% item.tldr %></v-card-text></v-col>
                             </v-row>
                         </div>
                     
                     </v-card>
-                
-            </div>
+                    
+                </div>
+            </li>
+
                 <!-- <v-sheet :color="getColor2(item.level+1)"> -->
                 
                     <v-scroll-y-transition>
@@ -45,7 +49,8 @@
                     ></tree-item>
                 </ul></v-scroll-y-transition>
         
-    </li>
+    
+    
     <v-bottom-sheet scrollable v-model="sheet">
         <v-sheet>
             <v-btn class="mt-6" text color="red" @click="sheet = !sheet">close</v-btn>
@@ -355,7 +360,8 @@
                                                             <v-spacer></v-spacer>
                                                             <v-card min-width="140" ml-5 mr-5 max-height="40" outlined>
                                                                 <v-row class='text-center ml-3 mr-3'>
-                                                                    <v-btn icon color="grey lighten-2">
+                                                                    <v-btn :style="post.user_up_style" icon
+                                                                        @click="post_vote({{request.user.id}}, post.id, 1, index)">
                                                                         <v-icon>fa-arrow-up</v-icon>
                                                                     </v-btn>
                                                                     <v-spacer></v-spacer>
@@ -366,9 +372,10 @@
                                                                         </div>
                                                                     </div>
                                                                     <v-spacer></v-spacer>
-                                                                    <v-btn icon color="grey lighten-2">
-                                                                        <v-icon>fa-arrow-down</v-icon>
-                                                                    </v-btn>
+                                                                    <v-btn :style="post.user_down_style" icon
+                                                                            @click="post_vote({{request.user.id}}, post.id, -1, index)">
+                                                                            <v-icon>fa-arrow-down</v-icon>
+                                                                        </v-btn>
                                                                 </v-row>
                                                             </v-card>
                                                             <v-spacer></v-spacer>
@@ -386,8 +393,7 @@
                 </v-card>
             </v-app>
         </v-app>
-        <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay
-            transition="dialog-bottom-transition">
+        <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay>
             <v-card :color="getPostColor2(detail_index)" fill-height>
                 <v-app-bar app dark>
                     <v-btn icon @click="close_post">
@@ -454,7 +460,9 @@
                     </v-card>
                     </v-container>
                     <tree-item class="item" v-on:show-click-details='getSelectedComment' :item="treeData">
+                    
                     </tree-item>
+                
                     </v-sheet>
                 </v-main>
             </v-card>
