@@ -78,6 +78,7 @@ class AllPostsSerializer(serializers.ModelSerializer):
             'user_down_style',
             'weighted_score',
             'age_in_days',
+            'number_of_comments',
         ]
         extra_kwargs = {
             "url": {"view_name": "api:allposts", "lookup_field": "title"}

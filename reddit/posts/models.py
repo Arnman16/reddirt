@@ -75,7 +75,6 @@ class Post(TimeStampedModel):
         return self.owner.username
 
     def subreddit_name(self):
-
         return self.subreddit.name
 
     def time_since_post(self):
@@ -99,6 +98,9 @@ class Post(TimeStampedModel):
 
     def owner_url(self):
         return '/users/' + self.owner.username
+    
+    def number_of_comments(self):
+        return PostComment.objects.filter(post_id=self.id).count()
 
     def description_br(self):
         safe_text = self.description.replace('<', '').replace('>', '').replace(
@@ -212,6 +214,7 @@ class PostComment(TimeStampedModel):
         for vote in votes:
             score = score + vote.vote
         return score
+        
     def __str__(self):
         if len(self.comment) > 20:
             return self.comment[:20] + '...'

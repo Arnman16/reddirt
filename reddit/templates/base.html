@@ -341,10 +341,14 @@
                                                         <div class="text-lg-h5 text-md-body-1 text-sm-body-2 mb-6 mt-6">
                                                             <% post.title %>
                                                         </div>
-                                                        <v-list-item-subtitle id="card_user"><a
-                                                                v-bind:href="post.owner_url"><% post.username %></a>
+                                                        
+                                                        <v-list-item-subtitle mb-1 id="card_user">
+                                                            <strong><a
+                                                                v-bind:href="post.owner_url"><% post.username %></a></strong>
                                                             <% post.time_since_post %></v-list-item-subtitle>
-                                                    </v-list-item-content>
+                                                    <v-list-item-subtitle>
+                                                    <% post.number_of_comments %> comment(s)</v-list-item-subtitle>
+                                            </v-list-item-content>
                                                     <!-- <v-list-item-avatar tile size="80">
                                                     <v-icon size="40">
                                                         text_snippet
