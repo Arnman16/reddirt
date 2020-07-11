@@ -433,7 +433,7 @@ postApp = new Vue({
         },
         showPosts: async function () {
             if (this.postListData) {
-                this.postList = this.sortByScore(await this.postListData);
+                this.postList = await this.postListData;
                 var user_id = document.getElementById("userId").value;
                 window.history.pushState("object or string", "Title", this.subreddit_url);
                 this.postIdList = '';
@@ -492,6 +492,7 @@ postApp = new Vue({
                 this.postDetailTitle = await this.postDetailData['title']
                 this.postDetailDescription = await this.postDetailData['description']
                 this.detail_id = await this.postDetailData['id']
+                this.drawer = false;
                 this.showComments();
             }
             window.history.pushState("object or string", "Title", this.postDetailData.full_url);
@@ -641,6 +642,8 @@ postApp = new Vue({
                     this.postList[i]['user_down_style'] = this.novote_style;
                 }
             }
+            var holder = this.sortByScore(this.postList);
+            this.postList = holder;
             console.log(votes)
         },
         get_votes_promise: function () {
