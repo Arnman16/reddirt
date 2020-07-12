@@ -420,6 +420,15 @@
             </v-app>
         </v-app>
         <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay>
+            <v-card>
+                <a :href="postDetailData.link" target="_blank" rel="noopener noreferrer">
+                <v-img
+                v-if="postDetailData.link"
+                :src="postDetailData.link"
+                >
+                </v-img>
+            </a>
+            </v-card>
             <v-card :color="getPostColor2(detail_index)" fill-height>
                 <v-app-bar app dark>
                     <v-btn icon @click="close_post">
