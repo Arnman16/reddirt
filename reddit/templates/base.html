@@ -335,7 +335,29 @@
                                         <v-flex xs12 md12 center class="pa-0 ma-0">
                                             <v-card hover :color="getPostColor(index)" class="pcard mx-auto pa-0"
                                                 justify-center fill-width max-width="800">
-                                                <v-list-item three-line @click="loadDetailJson(index)">
+                                                <v-img
+                                                    v-if="post.link"
+                                                    :src="post.link"
+                                                    class="white--text align-end"
+                                                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.8)"
+                                                    height="200px"
+                                                    @click="loadDetailJson(index)">
+                                                    <v-card-title class="headline" v-text="post.title"></v-card-title>
+                                                    <v-card-subtitle
+                                                        class="white--text align-end"
+                                                        v-text="post.username">                                                       
+                                                    </v-card-subtitle>
+                                                    <v-card-subtitle
+                                                        class="white--text align-end"
+                                                        v-text="post.time_since_post">
+                                                    </v-card-subtitle>
+
+<!--                                                         
+                                                        <% post.time_since_post %></v-list-item-subtitle>
+                                                <v-list-item-subtitle>
+                                                <% post.number_of_comments %> comment(s)</v-list-item-subtitle> -->
+                                                </v-img>
+                                                <v-list-item v-if="!post.link" three-line @click="loadDetailJson(index)">
                                                     <v-list-item-content class="text-center">
                                                         <div class="overline mb-0"><% post.subreddit_name %></div>
                                                         <div class="text-lg-h5 text-md-body-1 text-sm-body-2 mb-6 mt-6">
