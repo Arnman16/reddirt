@@ -353,11 +353,6 @@
                                                         class="white--text align-end"
                                                         v-text="post.time_since_post">
                                                     </v-card-subtitle>
-
-<!--                                                         
-                                                        <% post.time_since_post %></v-list-item-subtitle>
-                                                <v-list-item-subtitle>
-                                                <% post.number_of_comments %> comment(s)</v-list-item-subtitle> -->
                                                 </v-img>
                                                 <v-list-item v-if="!post.link" three-line @click="loadDetailJson(index)">
                                                     <v-list-item-content class="text-center">
@@ -433,10 +428,7 @@
                     <v-spacer></v-spacer>
                 </v-app-bar>
                 <v-main>
-
-
-
-                    <v-card v-if="postDetailData.link" flat outlined color='rgba(255, 255, 255, 0)'>
+                    <v-card v-if="postDetailData.link" flat color='rgba(255, 255, 255, 0)'>
                         <a :href="postDetailData.link" target="_blank" rel="noopener noreferrer">
                             <v-img
                             height="75vh"
@@ -445,37 +437,13 @@
                             ></v-img>
                         </a>
                     </v-card>
-                    <v-card elevation="3" color='rgba(255, 255, 255, 0.5)' rounded class="pa-10 ma-4">
-                        <v-container>
-                            <v-layout row>
-
-                                <v-flex xs1 md1 mt-2 mb-2>
-                                    <v-col align='center' justify-center>
-                                        <div>
-                                            <v-flex xs4 md4>
-                                                <v-icon :style="postDetailData.user_up_style"
-                                                    :id="'upvote-' + postDetailData.id" class="upvote"
-                                                    @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
-                                                    arrow_upward
-                                                </v-icon>
-                                            </v-flex>
-                                            <v-flex xs4 md4>
-                                                <div justify-center align="center" ma-0
-                                                    :id="'score-' + postDetailData.id" class="text-center">
-                                                    <% postDetailData.score %></text></div>
-                                            </v-flex>
-                                            <v-flex xs4 md4>
-                                                <v-icon :style="postDetailData.user_down_style"
-                                                    :id="'downvote-' + postDetailData.id" class="downvote"
-                                                    @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
-                                                    arrow_downward
-                                                </v-icon>
-                                            </v-flex>
-                                        </div>
-                                </v-flex>
-                                </v-col>
-                                <v-col>
-                                    <v-flex xs11 md11>
+                    <v-layout>
+                    <v-card elevation="3" width="100%" color='rgba(255, 255, 255, 0.5)' rounded class="pa-0 ma-0">
+                        <v-container pa-0>
+                            <v-layout row pa-4 class="align-content-center">
+                                <v-flex xs11 md11>
+                                <v-col fluid>
+                                    
                                         <h4 class="display-5"><% postDetailData.title %></h4>
                                         <div v-if="postDetailData.owner == {{request.user.id}}">
                                             <v-btn @click="edit_post_popup = true" small>EDIT</v-btn>
@@ -492,7 +460,42 @@
                                 </v-col>
                                 </v-flex>
                             </v-layout>
+                            <v-flex>
+                            <v-card flat 
+                                class="ma-0 ba-0"
+                                width="100%">
+                            <v-card-actions
+                            width="100%">
+                                <v-row class='d-flex text-center ma-0'>
+                                    <v-spacer></v-spacer>
+                                    <v-spacer></v-spacer>
+                                    <v-card min-width="140" ml-5 mr-5 max-height="40" outlined>
+                                        <v-row class='text-center ml-3 mr-3'>
+                                            <v-btn :style="postDetailData.user_up_style" icon
+                                                @click="post_vote({{request.user.id}}, postDetailData.id, 1, 1)">
+                                                <v-icon>fa-arrow-up</v-icon>
+                                            </v-btn>
+                                            <v-spacer></v-spacer>
+                                            <div class="ma-1 text-center justify-center">
+                                                <div
+                                                    class="text-lg-h5 text-md-body-1 text-sm-body-2">
+                                                    <% postDetailData.score %>
+                                                </div>
+                                            </div>
+                                            <v-spacer></v-spacer>
+                                            <v-btn :style="postDetailData.user_down_style" icon
+                                                    @click="post_vote({{request.user.id}}, postDetailData.id, -1, 1)">
+                                                    <v-icon>fa-arrow-down</v-icon>
+                                                </v-btn>
+                                        </v-row>
+                                    </v-card>
+                                    <v-spacer></v-spacer>
+                                    <v-spacer></v-spacer>
+                                </v-row>
+                            </v-card-actions>
                     </v-card>
+                </v-flex>
+            </v-layout>
                     </v-container>
                     <tree-item class="item" v-on:show-click-details='getSelectedComment' :item="treeData">
                     

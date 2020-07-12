@@ -357,10 +357,10 @@ postApp = new Vue({
         },
         ],
         upvote_style: {
-            color: "orange",
+            color: "rgb(124, 199, 103)",
         },
         downvote_style: {
-            color: "blue",
+            color: "rgb(213, 60, 60)",
         },
         novote_style: {
             color: "grey",
@@ -429,7 +429,7 @@ postApp = new Vue({
         },
         showComments: async function () {
             holder = await this.getComments();
-            this.commentsList = { children: holder, comment: "Comments", tldr: "Comments", id: 0, post_id: this.detail_id };
+            this.commentsList = { children: holder, tldr: "Comments("+this.postDetailData['number_of_comments']+")", comment: "Comments", id: 0, post_id: this.detail_id };
             this.treeData = this.commentsList;
 
         },
@@ -476,8 +476,6 @@ postApp = new Vue({
             }
         },
         loadDetailJson: async function (index) {
-            document.body.scrollTop = 0; // For Safari
-            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
             this.detail_index = index;
             this.postDetailData = this.postList[index];
             if (this.postDetailData != '') {
@@ -490,6 +488,8 @@ postApp = new Vue({
                 this.showComments();
             }
             window.history.pushState("object or string", "Title", this.postDetailData.full_url);
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
         },
         submit_func: function () {
             axios.defaults.xsrfCookieName = 'csrftoken';
