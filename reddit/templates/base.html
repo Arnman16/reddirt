@@ -291,6 +291,7 @@
                                 <v-container fluid>
                                     <form>
                                         <v-text-field v-model="submit_title" label="Title"></v-text-field>
+                                        <v-text-field v-model="submit_link" label="Direct Link to Image"></v-text-field>
                                         <v-textarea v-model="submit_description" label="Description"></v-textarea>
                                         <v-btn class="mr-4" @click="submit">submit</v-btn>
                                         <v-btn @click="clear">clear</v-btn>
@@ -311,6 +312,7 @@
                                 <v-container fluid>
                                     <form>
                                         <v-text-field v-model="postDetailTitle" label="Title"></v-text-field>
+                                        <v-textarea v-model="edit_link" label="Direct Link to Image "></v-textarea>
                                         <v-textarea v-model="postDetailDescription" label="Description"></v-textarea>
                                         <v-btn class="mr-4" @click="edit_post">submit changes</v-btn>
                                         <v-btn @click="clear">clear</v-btn>
@@ -419,15 +421,7 @@
                 </v-card>
             </v-app>
         </v-app>
-        <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay>
-            <v-card v-if="postDetailData.link">
-                <a :href="postDetailData.link" target="_blank" rel="noopener noreferrer">
-                <v-img
-                height="100%"
-                :src="postDetailData.link"
-                ></v-img>   
-            </a>
-            </v-card>
+        <v-dialog app v-model="postDetail" :detail_index="detail_index" persistent fullscreen hide-overlay> 
             <v-card :color="getPostColor2(detail_index)" fill-height>
                 <v-app-bar app dark>
                     <v-btn icon @click="close_post">
@@ -442,7 +436,15 @@
 
 
 
-
+                    <v-card v-if="postDetailData.link" flat outlined color='rgba(255, 255, 255, 0)'>
+                        <a :href="postDetailData.link" target="_blank" rel="noopener noreferrer">
+                            <v-img
+                            height="75vh"
+                            :src="postDetailData.link"
+                            contain
+                            ></v-img>
+                        </a>
+                    </v-card>
                     <v-card elevation="3" color='rgba(255, 255, 255, 0.5)' rounded class="pa-10 ma-4">
                         <v-container>
                             <v-layout row>
@@ -470,7 +472,6 @@
                                                 </v-icon>
                                             </v-flex>
                                         </div>
-
                                 </v-flex>
                                 </v-col>
                                 <v-col>

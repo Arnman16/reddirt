@@ -252,9 +252,11 @@ postApp = new Vue({
         postDetail: false,
         postDetailData: '',
         submit_title: '',
+        submit_link: '',
         submit_description: '',
         postDetailTitle: '',
         postDetailDescription: '',
+        edit_link: '',
         detail_id: null,
         items: [
             {
@@ -467,31 +469,23 @@ postApp = new Vue({
                 this.postDetail = !this.postDetail;
                 this.postDetailTitle = await this.postDetailData['title'];
                 this.postDetailDescription = await this.postDetailData['description'];
+                this.edit_link = await this.postDetailData['link'];
                 this.detail_id = await this.postDetailData['id'];
                 this.get_votes_detail_direct();
                 this.showComments();
             }
         },
         loadDetailJson: async function (index) {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
             this.detail_index = index;
-            // jsonurl = '/api/allposts/' + url;
             this.postDetailData = this.postList[index];
-            // this.detail_id = this.postList[index]['id'];
-            // this.postDetailData = await axios
-            //     .get(jsonurl)
-            //     .then(response => {
-            //         return response.data;
-            //     })
-            //     .catch(error => {
-            //         console.log(error);
-            //         this.error_alert = !this.error_alert;
-            //     })
-            //     .finally(() => this.loading = false);
             if (this.postDetailData != '') {
                 this.postDetail = !this.postDetail;
-                this.postDetailTitle = await this.postDetailData['title']
-                this.postDetailDescription = await this.postDetailData['description']
-                this.detail_id = await this.postDetailData['id']
+                this.postDetailTitle = await this.postDetailData['title'];
+                this.postDetailDescription = await this.postDetailData['description'];
+                this.edit_link = await this.postDetailData['link'];
+                this.detail_id = await this.postDetailData['id'];
                 this.drawer = false;
                 this.showComments();
             }
@@ -502,6 +496,7 @@ postApp = new Vue({
             axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
             return axios.post('/api/posts/', {
                 title: this.submit_title,
+                link: this.submit_link,
                 description: this.submit_description,
                 owner: document.getElementById("userId").value,
                 subreddit: this.subreddit_id,
@@ -534,6 +529,7 @@ postApp = new Vue({
             return axios.put(drf_url, {
                 title: this.postDetailTitle,
                 description: this.postDetailDescription,
+                link: this.edit_link,
                 owner: document.getElementById("userId").value,
                 subreddit: this.subreddit_id,
             })
@@ -554,6 +550,7 @@ postApp = new Vue({
                 this.success_alert = true;
                 this.postDetailData['title'] = this.postDetailTitle;
                 this.postDetailData['description'] = this.postDetailDescription;
+                this.postDetailData['link'] = this.edit_link;
                 this.postDetailData['description_br'] =
                     await axios
                         .get(drf_url)
