@@ -10,18 +10,21 @@
         </span>
     </v-col>
 </v-subheader>
-<div class="my-nav-item" @click="popup = !popup, drawer = !drawer">
+<div v-if="subreddit_id != 0" class="my-nav-item" @click="popup = !popup, drawer = !drawer">
     <button>
         <v-list-item>
             <v-list-item-action>
                 <v-icon>add
                 </v-icon>
             </v-list-item-action>
+            
+            
             <v-list-item-content>
                 <v-list-item-title class="white--text">
                     Post to <span id="subreddit_name"><% subreddit_name %></span>
                 </v-list-item-title>
             </v-list-item-content>
+            
         </v-list-item>
     </button>
 </div>
